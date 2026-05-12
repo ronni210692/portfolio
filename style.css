@@ -8,7 +8,7 @@
   --black: #1a1a1a;
   --gray:  #555555;
   --white: #ffffff;
-  --page-px: 48px;   /* horizontal padding — used consistently */
+  --page-px: 48px;
 }
 
 html { scroll-behavior: smooth; }
@@ -30,38 +30,42 @@ body {
   min-height: 620px;
   display: flex;
   flex-direction: column;
-  background: var(--white);   /* white body shows through the 15px gap */
+  background: var(--white);
 }
 
-/* bg image — 15px gap top + sides, rounded top corners only */
+/* bg image — 15px inset top+sides, rounded top corners */
 .hero-bg {
   position: absolute;
   top: 15px;
   left: 15px;
   right: 15px;
   bottom: 0;
-  background: url('bg_hero.png') center center / cover no-repeat;
+  background: url('bg_hero.png') center 30% / cover no-repeat;
   border-radius: 30px 30px 0 0;
   z-index: 0;
 }
 
-/* strong white fade — blends into the white page below */
-.hero-fade {
+/* ── CRITICAL FIX: solid white block covers bottom of image ──
+   This guarantees a clean white edge before the next section */
+.hero-bg::after {
+  content: '';
   position: absolute;
   bottom: 0;
-  left: 15px;
-  right: 15px;
-  height: 50%;
+  left: 0;
+  right: 0;
+  height: 35%;
   background: linear-gradient(
     to bottom,
-    transparent      0%,
-    rgba(255,255,255,0.7)  50%,
-    rgba(255,255,255,0.95) 80%,
-    #ffffff          100%
+    transparent           0%,
+    rgba(255,255,255,0.6) 30%,
+    rgba(255,255,255,0.88) 60%,
+    #ffffff               85%,
+    #ffffff               100%
   );
-  z-index: 1;
-  pointer-events: none;
 }
+
+/* remove the old separate fade div — handled above */
+.hero-fade { display: none; }
 
 /* ── NAV ── */
 .nav {
@@ -105,7 +109,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0 var(--page-px) 80px;
+  padding: 0 var(--page-px) 120px; /* bottom padding keeps content above the fade */
 }
 
 .hero-title {
@@ -172,23 +176,25 @@ body {
   box-shadow: 0 4px 20px rgba(0,0,0,0.22);
 }
 
-/* ── Glass button ── */
+/* ── Glass button ──
+   Works even on light bg: border + semi-white + blur create
+   a frosted appearance regardless of what's behind it */
 .btn-light {
-  background: rgba(255, 255, 255, 0.30);
+  background: rgba(255, 255, 255, 0.45);
   color: var(--black);
-  border: 1.5px solid rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   box-shadow:
-    0 2px 12px rgba(0, 0, 0, 0.10),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    0 2px 8px rgba(0,0,0,0.10),
+    inset 0 1px 0 rgba(255,255,255,1);
 }
 
 .btn-light:hover {
-  background: rgba(255, 255, 255, 0.50);
+  background: rgba(255, 255, 255, 0.65);
   box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 4px 16px rgba(0,0,0,0.12),
+    inset 0 1px 0 rgba(255,255,255,1);
 }
 
 /* ══════════════════════════════
@@ -245,7 +251,6 @@ body {
   padding: 16px 0;
 }
 
-/* fade left + right */
 .marquee-wrapper::before,
 .marquee-wrapper::after {
   content: '';
@@ -267,13 +272,11 @@ body {
   background: linear-gradient(to left, #fff 0%, transparent 100%);
 }
 
-/* ── KEY FIX: NO padding on track — ensures -50% = exact loop point ── */
+/* Track: no gap, no padding — each SET handles its own spacing */
 .marquee-track {
   display: flex;
   align-items: center;
-  gap: 60px;
   width: max-content;
-  /* NO padding here */
   animation: marquee 22s linear infinite;
   will-change: transform;
 }
@@ -287,7 +290,16 @@ body {
   to   { transform: translateX(-50%); }
 }
 
-/* individual items */
+/* ── KEY FIX: padding-right = gap value → both sets are equal width ──
+   Total = set1 + set2 = 2× set1_width → -50% = exactly start of set2 */
+.marquee-set {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  padding-right: 56px; /* must equal gap */
+  flex-shrink: 0;
+}
+
 .tool-item {
   display: inline-flex;
   align-items: center;
@@ -295,13 +307,12 @@ body {
   flex-shrink: 0;
 }
 
-/* SVG icons */
 .tool-svg {
   width: 44px;
   height: 44px;
   display: block;
   transition: transform 0.2s ease, opacity 0.2s ease;
-  opacity: 0.8;
+  opacity: 0.82;
 }
 
 .tool-svg:hover {
@@ -309,7 +320,6 @@ body {
   opacity: 1;
 }
 
-/* Adobe badge icons */
 .tool-badge {
   display: inline-flex;
   align-items: center;
@@ -321,30 +331,21 @@ body {
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  transition: transform 0.2s ease;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
 .tool-badge:hover { transform: scale(1.1); }
 
-.tool-badge.ps {
-  background: #001E36;
-  color: #31A8FF;
-}
-
-.tool-badge.ai {
-  background: #2C0A00;
-  color: #FF9A00;
-}
+.tool-badge.ps { background: #001E36; color: #31A8FF; }
+.tool-badge.ai { background: #2C0A00; color: #FF9A00; }
 
 /* ══════════════════════════════
-   RESPONSIVE — MOBILE
+   MOBILE
 ══════════════════════════════ */
 @media (max-width: 768px) {
 
-  :root {
-    --page-px: 20px;  /* all sections use same px on mobile */
-  }
+  :root { --page-px: 5vw; }
 
   /* Hero */
   .hero-bg {
@@ -354,50 +355,45 @@ body {
     border-radius: 20px 20px 0 0;
   }
 
-  .hero-fade {
-    left: 10px;
-    right: 10px;
-    height: 55%;
-  }
-
   .hero-content {
-    padding: 0 var(--page-px) 60px;
+    padding: 0 5vw 100px;
   }
 
   .hero-sub br { display: none; }
 
   .btn {
     width: 44vw;
-    max-width: 180px;
+    max-width: 175px;
   }
 
-  /* Why section — stack vertically */
+  /* Why — stack vertically, centered */
   .why {
-    padding: 64px var(--page-px);
+    padding: 64px 5vw;
   }
 
   .why-inner {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
+    text-align: center;
   }
 
   .why-title {
-    font-size: clamp(32px, 8vw, 44px);
-    /* single line on mobile */
-    white-space: nowrap;
+    font-size: clamp(30px, 8vw, 42px);
+    white-space: normal;
   }
 
   .why-text {
     font-size: 15px;
-    text-align: left;
+    text-align: center;
   }
 
-  /* Marquee — smaller icons on mobile */
-  .tool-svg  { width: 36px; height: 36px; }
+  /* Marquee */
+  .tool-svg   { width: 36px; height: 36px; }
   .tool-badge { width: 42px; height: 42px; font-size: 13px; }
-  .marquee-track { gap: 40px; }
+  .marquee-set { gap: 36px; padding-right: 36px; }
 
   /* Nav */
-  .nav-links { gap: 22px; }
+  .nav { padding: 22px 5vw 0; }
+  .nav-links { gap: 20px; }
   .nav-links a { font-size: 13px; }
 }
