@@ -392,7 +392,28 @@ body {
 
   :root { --page-px: 5vw; }
 
-  /* Nav: hide links & cta, show hamburger */
+  /* Nav: always pill on mobile */
+  .nav {
+    top: 14px;
+    left: 20px;
+    right: 20px;
+    padding: 10px 10px 10px 20px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 50px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  }
+
+  /* Scrolled state on mobile — same pill, just keep position */
+  .nav.scrolled {
+    top: 14px;
+    left: 20px;
+    right: 20px;
+    padding: 10px 10px 10px 20px;
+  }
+
+  /* Hide links & cta, show hamburger */
   .nav-links,
   .nav-cta {
     display: none;
@@ -407,24 +428,18 @@ body {
     display: flex;
   }
 
-  /* Scrolled pill on mobile */
-  .nav.scrolled {
-    left: 40px;
-    right: 40px;
-    padding: 12px 20px;
-  }
-
-  /* Hero */
+  /* Hero bg — no inset on mobile */
   .hero-bg {
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    border-radius: 20px 20px 0 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
   }
 
+  /* Push content toward bottom so sky fills top — reduces gap to About */
   .hero-content {
     justify-content: flex-end;
-    padding: 80px 5vw 52px;
+    padding: 0 5vw 56px;
   }
 
   .hero-sub br { display: none; }
@@ -436,7 +451,7 @@ body {
 
   /* Reduce gap between hero and about */
   .about {
-    padding-top: 20px;
+    padding-top: 24px;
     padding-bottom: 60px;
   }
 
