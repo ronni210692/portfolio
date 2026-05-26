@@ -423,7 +423,8 @@ body {
   }
 
   .hero-content {
-    padding: 80px 5vw 100px;
+    justify-content: flex-end;
+    padding: 80px 5vw 52px;
   }
 
   .hero-sub br { display: none; }
@@ -431,5 +432,21 @@ body {
   .btn {
     width: 44vw;
     max-width: 175px;
+  }
+
+  /* Reduce gap between hero and about */
+  .about {
+    padding-top: 20px;
+    padding-bottom: 60px;
+  }
+
+  /* Tighter line-height on mobile */
+  .about-text {
+    line-height: 1.2;
+  }
+
+  /* Hide desktop-only line breaks */
+  .br-desktop {
+    display: none;
   }
 }
