@@ -47,9 +47,9 @@ body {
 /* ── Scrolled state: floating pill ── */
 .nav.scrolled {
   top: 12px;
-  left: 80px;
-  right: 80px;
-  padding: 14px 32px;
+  left: 120px;
+  right: 120px;
+  padding: 12px 28px;
   background: rgba(255, 255, 255, 0.50);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -90,7 +90,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 22px;
+  padding: 11px 20px;
   border-radius: 980px;
   background: var(--black);
   color: var(--white);
@@ -343,21 +343,21 @@ body {
    ABOUT SECTION
 ══════════════════════════════ */
 .about {
-  padding: 120px var(--page-px) 140px;
+  padding: 60px var(--page-px) 120px;
   background: var(--white);
 }
 
 .about-inner {
-  max-width: 820px;
+  max-width: 780px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 36px;
+  gap: 24px;
   text-align: center;
 }
 
-/* Small pill label — e.g. "• About me" */
+/* Small pill label */
 .section-pill {
   display: inline-flex;
   align-items: center;
@@ -365,7 +365,7 @@ body {
   padding: 6px 16px;
   border-radius: 980px;
   background: #fce8e6;
-  color: #9a6057;
+  color: var(--black);
   font-size: 13px;
   font-weight: 400;
   letter-spacing: 0.01em;
@@ -373,14 +373,15 @@ body {
 
 /* Large statement paragraph */
 .about-text {
-  font-size: clamp(22px, 2.8vw, 36px);
+  font-size: clamp(20px, 2.4vw, 32px);
   font-weight: 400;
   color: #888888;
-  line-height: 1.55;
+  line-height: 1.6;
   letter-spacing: -0.02em;
 }
 
-.about-text strong {
+/* Highlighted words — same weight, just darker */
+.about-text .highlight {
   font-weight: 400;
   color: var(--black);
 }
@@ -409,8 +410,8 @@ body {
 
   /* Scrolled pill on mobile */
   .nav.scrolled {
-    left: 12px;
-    right: 12px;
+    left: 16px;
+    right: 16px;
     padding: 12px 20px;
   }
 
