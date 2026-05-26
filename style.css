@@ -338,6 +338,9 @@ body {
 .reveal-delay-1 { transition-delay: 0.15s; }
 .reveal-delay-2 { transition-delay: 0.30s; }
 
+/* Mobile-only line breaks (hidden on desktop) */
+.br-mobile { display: none; }
+
 /* ══════════════════════════════
    ABOUT SECTION
 ══════════════════════════════ */
@@ -392,20 +395,19 @@ body {
 
   :root { --page-px: 5vw; }
 
-  /* Nav: always pill on mobile */
+  /* ── Nav: always a pill on mobile (less rounded than desktop) ── */
   .nav {
     top: 14px;
     left: 20px;
     right: 20px;
     padding: 10px 10px 10px 20px;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.90);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: 50px;
+    border-radius: 20px;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
   }
 
-  /* Scrolled state on mobile — same pill, just keep position */
   .nav.scrolled {
     top: 14px;
     left: 20px;
@@ -413,55 +415,55 @@ body {
     padding: 10px 10px 10px 20px;
   }
 
-  /* Hide links & cta, show hamburger */
   .nav-links,
-  .nav-cta {
-    display: none;
+  .nav-cta { display: none; }
+
+  .hamburger { display: flex; }
+
+  .mobile-menu { display: flex; }
+
+  /* ── Hero: auto height so content sits naturally, sky fills behind ── */
+  .hero {
+    height: auto;
+    min-height: unset;
   }
 
-  .hamburger {
-    display: flex;
-  }
-
-  /* Mobile menu shown as flex when .open */
-  .mobile-menu {
-    display: flex;
-  }
-
-  /* Hero bg — no inset on mobile */
   .hero-bg {
     top: 0;
     left: 0;
     right: 0;
+    bottom: 0;
     border-radius: 0;
   }
 
-  /* Push content toward bottom so sky fills top — reduces gap to About */
   .hero-content {
-    justify-content: flex-end;
-    padding: 0 5vw 56px;
+    justify-content: flex-start;
+    padding: 108px 5vw 72px;
   }
 
   .hero-sub br { display: none; }
 
+  /* ── Buttons: slimmer on mobile ── */
   .btn {
-    width: 44vw;
-    max-width: 175px;
+    width: auto;
+    max-width: none;
+    padding: 11px 28px;
+    font-size: 13px;
   }
 
-  /* Reduce gap between hero and about */
+  /* Show mobile-only line breaks */
+  .br-mobile { display: block; }
+
+  /* Hide desktop-only line breaks */
+  .br-desktop { display: none; }
+
+  /* ── About: reduce gap, tighter line-height ── */
   .about {
-    padding-top: 24px;
+    padding-top: 28px;
     padding-bottom: 60px;
   }
 
-  /* Tighter line-height on mobile */
   .about-text {
     line-height: 1.2;
-  }
-
-  /* Hide desktop-only line breaks */
-  .br-desktop {
-    display: none;
   }
 }
