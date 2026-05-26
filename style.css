@@ -46,15 +46,15 @@ body {
 
 /* ── Scrolled state: floating pill ── */
 .nav.scrolled {
-  top: 10px;
-  left: 20px;
-  right: 20px;
-  padding: 14px 28px;
-  background: rgba(255, 255, 255, 0.82);
+  top: 12px;
+  left: 80px;
+  right: 80px;
+  padding: 14px 32px;
+  background: rgba(255, 255, 255, 0.50);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-radius: 50px;
-  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.08);
 }
 
 .nav-logo {
@@ -367,7 +367,7 @@ body {
   background: #fce8e6;
   color: #9a6057;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0.01em;
 }
 
@@ -381,7 +381,7 @@ body {
 }
 
 .about-text strong {
-  font-weight: 700;
+  font-weight: 400;
   color: var(--black);
 }
 
