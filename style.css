@@ -21,6 +21,164 @@ body {
 }
 
 /* ══════════════════════════════
+   NAV — fixed, animates on scroll
+══════════════════════════════ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px var(--page-px);
+  /* smooth transition for all animating props */
+  transition:
+    top        0.35s ease,
+    left       0.35s ease,
+    right      0.35s ease,
+    padding    0.35s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease,
+    border-radius 0.35s ease;
+}
+
+/* ── Scrolled state: floating pill ── */
+.nav.scrolled {
+  top: 10px;
+  left: 20px;
+  right: 20px;
+  padding: 14px 28px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 50px;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.10);
+}
+
+.nav-logo {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--black);
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+  /* centered between logo and cta */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--black);
+  transition: opacity 0.2s;
+}
+
+.nav-links a:hover { opacity: 0.5; }
+
+/* Contact CTA button in nav */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border-radius: 980px;
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: opacity 0.2s, transform 0.18s;
+}
+
+.nav-cta:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+}
+
+/* Hamburger — hidden on desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block;
+  height: 2px;
+  background: var(--black);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Hamburger → X when open */
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile drawer ── */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.mobile-menu.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: center;
+}
+
+.mobile-menu a {
+  text-decoration: none;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--black);
+  letter-spacing: -0.02em;
+  transition: opacity 0.2s;
+}
+
+.mobile-menu a:hover { opacity: 0.5; }
+
+/* ══════════════════════════════
    HERO
 ══════════════════════════════ */
 .hero {
@@ -45,59 +203,25 @@ body {
   z-index: 0;
 }
 
-/* ── CRITICAL FIX: solid white block covers bottom of image ──
-   This guarantees a clean white edge before the next section */
+/* Strong white fade at bottom — ensures clean handoff to white page */
 .hero-bg::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 35%;
+  height: 40%;
   background: linear-gradient(
     to bottom,
-    transparent           0%,
-    rgba(255,255,255,0.6) 30%,
-    rgba(255,255,255,0.88) 60%,
-    #ffffff               85%,
-    #ffffff               100%
+    transparent            0%,
+    rgba(255,255,255,0.55) 35%,
+    rgba(255,255,255,0.88) 65%,
+    #ffffff                88%,
+    #ffffff                100%
   );
+  border-radius: 0 0 0 0;
+  pointer-events: none;
 }
-
-/* remove the old separate fade div — handled above */
-.hero-fade { display: none; }
-
-/* ── NAV ── */
-.nav {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 34px var(--page-px) 0;
-}
-
-.nav-logo {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--black);
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 40px;
-}
-
-.nav-links a {
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--black);
-  transition: opacity 0.2s;
-}
-
-.nav-links a:hover { opacity: 0.5; }
 
 /* ── HERO CONTENT ── */
 .hero-content {
@@ -109,7 +233,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0 var(--page-px) 120px; /* bottom padding keeps content above the fade */
+  padding: 80px var(--page-px) 120px;
 }
 
 .hero-title {
@@ -176,9 +300,6 @@ body {
   box-shadow: 0 4px 20px rgba(0,0,0,0.22);
 }
 
-/* ── Glass button ──
-   Works even on light bg: border + semi-white + blur create
-   a frosted appearance regardless of what's behind it */
 .btn-light {
   background: rgba(255, 255, 255, 0.45);
   color: var(--black);
@@ -191,154 +312,8 @@ body {
 }
 
 .btn-light:hover {
-  background: rgba(255, 255, 255, 0.65);
-  box-shadow:
-    0 4px 16px rgba(0,0,0,0.12),
-    inset 0 1px 0 rgba(255,255,255,1);
+  background: rgba(255,255,255,0.65);
 }
-
-/* ══════════════════════════════
-   WHY WORK WITH ME
-══════════════════════════════ */
-.why {
-  padding: 100px var(--page-px);
-  background: var(--white);
-}
-
-.why-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 5fr 7fr;
-  gap: 80px;
-  align-items: center;
-}
-
-.why-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: clamp(30px, 3.6vw, 50px);
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  color: var(--black);
-}
-
-.why-title em {
-  font-family: 'Rosarivo', serif;
-  font-style: italic;
-  font-weight: 400;
-  color: var(--black);
-}
-
-.why-text {
-  font-size: clamp(14px, 1.4vw, 16px);
-  font-weight: 400;
-  color: var(--gray);
-  line-height: 1.85;
-}
-
-/* ══════════════════════════════
-   TOOLS MARQUEE
-══════════════════════════════ */
-.tools {
-  padding: 0 0 100px;
-  background: var(--white);
-}
-
-.marquee-wrapper {
-  position: relative;
-  overflow: hidden;
-  padding: 16px 0;
-}
-
-.marquee-wrapper::before,
-.marquee-wrapper::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 120px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.marquee-wrapper::before {
-  left: 0;
-  background: linear-gradient(to right, #fff 0%, transparent 100%);
-}
-
-.marquee-wrapper::after {
-  right: 0;
-  background: linear-gradient(to left, #fff 0%, transparent 100%);
-}
-
-/* Track: no gap, no padding — each SET handles its own spacing */
-.marquee-track {
-  display: flex;
-  align-items: center;
-  width: max-content;
-  animation: marquee 22s linear infinite;
-  will-change: transform;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-/* ── KEY FIX: padding-right = gap value → both sets are equal width ──
-   Total = set1 + set2 = 2× set1_width → -50% = exactly start of set2 */
-.marquee-set {
-  display: flex;
-  align-items: center;
-  gap: 56px;
-  padding-right: 56px; /* must equal gap */
-  flex-shrink: 0;
-}
-
-.tool-item {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.tool-svg {
-  width: 44px;
-  height: 44px;
-  display: block;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-  opacity: 0.82;
-}
-
-.tool-svg:hover {
-  transform: scale(1.15);
-  opacity: 1;
-}
-
-.tool-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 11px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
-
-.tool-badge:hover { transform: scale(1.1); }
-
-.tool-badge.ps { background: #001E36; color: #31A8FF; }
-.tool-badge.ai { background: #2C0A00; color: #FF9A00; }
 
 /* ══════════════════════════════
    MOBILE
@@ -346,6 +321,28 @@ body {
 @media (max-width: 768px) {
 
   :root { --page-px: 5vw; }
+
+  /* Nav: hide links & cta, show hamburger */
+  .nav-links,
+  .nav-cta {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  /* Mobile menu shown as flex when .open */
+  .mobile-menu {
+    display: flex;
+  }
+
+  /* Scrolled pill on mobile */
+  .nav.scrolled {
+    left: 12px;
+    right: 12px;
+    padding: 12px 20px;
+  }
 
   /* Hero */
   .hero-bg {
@@ -356,7 +353,7 @@ body {
   }
 
   .hero-content {
-    padding: 0 5vw 100px;
+    padding: 80px 5vw 100px;
   }
 
   .hero-sub br { display: none; }
@@ -365,35 +362,4 @@ body {
     width: 44vw;
     max-width: 175px;
   }
-
-  /* Why — stack vertically, centered */
-  .why {
-    padding: 64px 5vw;
-  }
-
-  .why-inner {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    text-align: center;
-  }
-
-  .why-title {
-    font-size: clamp(30px, 8vw, 42px);
-    white-space: normal;
-  }
-
-  .why-text {
-    font-size: 15px;
-    text-align: center;
-  }
-
-  /* Marquee */
-  .tool-svg   { width: 36px; height: 36px; }
-  .tool-badge { width: 42px; height: 42px; font-size: 13px; }
-  .marquee-set { gap: 36px; padding-right: 36px; }
-
-  /* Nav */
-  .nav { padding: 22px 5vw 0; }
-  .nav-links { gap: 20px; }
-  .nav-links a { font-size: 13px; }
 }
