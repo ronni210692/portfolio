@@ -47,6 +47,25 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* ──────────────────────────────────────
+   SCROLL REVEAL — Intersection Observer
+────────────────────────────────────── */
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target); // fire once
+      }
+    });
+  },
+  { threshold: 0.2 }
+);
+
+document.querySelectorAll('.reveal').forEach((el) => {
+  revealObserver.observe(el);
+});
+
+/* ──────────────────────────────────────
    HERO bg subtle parallax on scroll
 ────────────────────────────────────── */
 const heroBg = document.querySelector('.hero-bg');
