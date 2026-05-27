@@ -338,6 +338,103 @@ body {
 .reveal-delay-1 { transition-delay: 0.15s; }
 .reveal-delay-2 { transition-delay: 0.30s; }
 
+/* ══════════════════════════════
+   CASE STUDIES / PROJECTS
+══════════════════════════════ */
+.projects {
+  padding: 80px var(--page-px) 120px;
+  background: var(--white);
+}
+
+.projects-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.projects-title {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--black);
+  margin: 12px 0 16px;
+  text-align: center;
+}
+
+.projects-sub {
+  font-size: clamp(13px, 1.1vw, 15px);
+  color: var(--gray);
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+/* ── Grid: 2 columns ── */
+.projects-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Coloured image area */
+.card-img {
+  display: flex;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 24px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-img:hover {
+  transform: scale(1.015);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+}
+
+/* Placeholder image icon */
+.card-ph {
+  opacity: 0.45;
+}
+
+/* Info row below card */
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.card-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--black);
+  letter-spacing: -0.01em;
+}
+
+.card-tags {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+}
+
+.card-tags li {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--gray);
+}
+
 /* Mobile-only line breaks (hidden on desktop) */
 .br-mobile { display: none; }
 
@@ -454,6 +551,16 @@ body {
   /* Show mobile-only line breaks */
   .br-mobile { display: block; }
 
+
+  /* ── Projects grid: single column on mobile ── */
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card-img {
+    border-radius: 20px;
+  }
 
   /* ── About: reduce gap, tighter line-height ── */
   .about {
