@@ -539,6 +539,7 @@ body {
   }
 
   .hero-sub br { display: none; }
+  .br-desktop-only { display: none; }
 
   /* ── Buttons: slimmer on mobile ── */
   .btn {
