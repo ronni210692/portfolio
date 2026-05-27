@@ -338,8 +338,8 @@ body {
 .reveal-delay-1 { transition-delay: 0.15s; }
 .reveal-delay-2 { transition-delay: 0.30s; }
 
-/* Desktop line breaks — block span creates a hard break */
-.br-desktop { display: block; }
+/* Desktop line breaks — each about-line is a block on desktop */
+.about-line { display: block; }
 
 /* Mobile-only line breaks (hidden on desktop) */
 .br-mobile { display: none; }
@@ -457,8 +457,8 @@ body {
   /* Show mobile-only line breaks */
   .br-mobile { display: block; }
 
-  /* Hide desktop-only line breaks */
-  .br-desktop { display: none; }
+  /* Mobile: about-lines flow as inline text (no forced breaks) */
+  .about-line { display: inline; }
 
   /* ── About: reduce gap, tighter line-height ── */
   .about {
