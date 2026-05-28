@@ -457,12 +457,12 @@ body {
   margin-bottom: 40px;
 }
 
-/* 2-col row: title left, desc right — both start at the same top edge */
+/* 2-col row: title left, desc right — vertically centred relative to each other */
 .benefits-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
-  align-items: start;
+  align-items: center;
   width: 100%;
 }
 
