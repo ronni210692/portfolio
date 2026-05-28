@@ -435,6 +435,146 @@ body {
   color: var(--gray);
 }
 
+/* ══════════════════════════════
+   BENEFITS — BENTO GRID
+══════════════════════════════ */
+.benefits {
+  padding: 80px var(--page-px) 120px;
+  background: var(--white);
+}
+
+.benefits-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+/* ── 2-col header ── */
+.benefits-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  margin-bottom: 40px;
+}
+
+.benefits-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.benefits-title {
+  font-family: 'Rosarivo', serif;
+  font-size: clamp(28px, 3.6vw, 52px);
+  font-weight: 400;
+  color: var(--black);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.benefits-desc {
+  font-size: clamp(13px, 1.05vw, 15px);
+  color: var(--gray);
+  line-height: 1.75;
+  padding-top: 52px; /* visually aligns with heading */
+}
+
+/* ── Bento grid ── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.bento-card {
+  position: relative;
+  background: #f5f5f7;
+  border-radius: 20px;
+  padding: 28px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  transition: transform 0.25s ease;
+}
+
+.bento-card:hover { transform: scale(1.01); }
+
+.bento-wide { grid-column: span 2; }
+
+.bento-title {
+  font-family: 'Rosarivo', serif;
+  font-size: clamp(20px, 1.9vw, 28px);
+  font-weight: 400;
+  color: var(--black);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.bento-sub {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.65;
+  max-width: 46ch;
+}
+
+/* Decorative SVG icon — bottom-right of card */
+.bento-deco {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  color: var(--black);
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+/* ── Card 3: Happy Designer / Happy Client ── */
+.bento-happy {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  min-height: 200px;
+}
+
+.happy-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.happy-text {
+  font-family: 'Rosarivo', serif;
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 400;
+  color: var(--black);
+  letter-spacing: -0.02em;
+}
+
+.happy-circles {
+  display: flex;
+  align-items: center;
+}
+
+.h-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+  margin-left: -18px;
+  flex-shrink: 0;
+}
+
+.h-circle:first-child { margin-left: 0; }
+
+.bento-happy .bento-sub {
+  max-width: 36ch;
+  text-align: center;
+}
+
 /* Mobile-only line breaks (hidden on desktop) */
 .br-mobile { display: none; }
 
@@ -552,6 +692,25 @@ body {
   /* Show mobile-only line breaks */
   .br-mobile { display: block; }
 
+
+  /* ── Benefits header: stack on mobile ── */
+  .benefits-header {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .benefits-desc { padding-top: 0; }
+
+  /* ── Bento: single column on mobile ── */
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .bento-wide { grid-column: span 1; }
+
+  .happy-row { gap: 14px; }
+  .h-circle { width: 44px; height: 44px; margin-left: -14px; }
 
   /* ── Projects grid: single column on mobile ── */
   .projects-grid {
