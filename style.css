@@ -453,30 +453,31 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
-  align-items: start;
+  align-items: center; /* vertically centres desc with title */
   margin-bottom: 40px;
 }
 
 .benefits-left {
   display: flex;
   flex-direction: column;
+  align-items: flex-start; /* pill hugs its content — no stretch */
   gap: 16px;
 }
 
+/* Same font & weight as .projects-title */
 .benefits-title {
-  font-family: 'Rosarivo', serif;
+  font-family: 'Poppins', sans-serif;
   font-size: clamp(28px, 3.6vw, 52px);
-  font-weight: 400;
+  font-weight: 500;
   color: var(--black);
   line-height: 1.18;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .benefits-desc {
   font-size: clamp(13px, 1.05vw, 15px);
   color: var(--gray);
   line-height: 1.75;
-  padding-top: 52px; /* visually aligns with heading */
 }
 
 /* ── Bento grid — 3 cols, explicit placement ── */
