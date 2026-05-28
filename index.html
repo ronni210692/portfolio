@@ -197,85 +197,88 @@
         </p>
       </div>
 
-      <!-- Bento Grid -->
+      <!-- Bento Grid — explicit placement matching reference -->
       <div class="bento-grid">
 
-        <!-- 1 — wide -->
-        <article class="bento-card bento-wide reveal">
+        <!-- C1: More than just visuals — cols 1-2, row 1 -->
+        <article class="bento-card bento-c1 reveal">
           <h3 class="bento-title">More than just visuals</h3>
           <p class="bento-sub">Design is not only about how things look — it's about creating experiences people naturally connect with.</p>
-          <svg class="bento-deco" width="88" height="56" viewBox="0 0 88 56" fill="none" aria-hidden="true">
-            <rect x="28" y="0"  width="60" height="44" rx="6" stroke="currentColor" stroke-width="1.2"/>
-            <rect x="14" y="6"  width="60" height="44" rx="6" stroke="currentColor" stroke-width="1.2"/>
-            <rect x="0"  y="12" width="60" height="44" rx="6" stroke="currentColor" stroke-width="1.2"/>
-          </svg>
+          <!-- Visual: stacked design-layer cards -->
+          <div class="vis-layers" aria-hidden="true">
+            <div class="vis-layer" style="background:#F2C4CE; transform:rotate(-6deg) translate(16px,10px);"></div>
+            <div class="vis-layer" style="background:#B2DDD8; transform:rotate(-2deg) translate(6px,4px);"></div>
+            <div class="vis-layer" style="background:#F9F0E2;"></div>
+          </div>
         </article>
 
-        <!-- 2 — Human-centered -->
-        <article class="bento-card reveal reveal-delay-1">
+        <!-- C2: Human-centered — col 3, row 1 -->
+        <article class="bento-card bento-c2 reveal reveal-delay-1">
           <h3 class="bento-title">Human-<br>centered</h3>
           <p class="bento-sub">Designing with real people, emotions, and behaviors in mind.</p>
-          <svg class="bento-deco" width="40" height="52" viewBox="0 0 40 52" fill="none" aria-hidden="true">
-            <circle cx="20" cy="13" r="9" stroke="currentColor" stroke-width="1.2"/>
-            <path d="M4 50 C4 36 36 36 36 50" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-          </svg>
+          <!-- Visual: stylised avatar -->
+          <div class="vis-avatar" aria-hidden="true">
+            <div class="avatar-head"></div>
+            <div class="avatar-body"></div>
+          </div>
         </article>
 
-        <!-- 3 — Happy Designer / Happy Client (wide) -->
-        <article class="bento-card bento-wide bento-happy reveal">
+        <!-- C3: Happy Designer / Happy Client — cols 1-2, row 2 -->
+        <article class="bento-card bento-c3 bento-happy reveal">
+          <!-- subtitle FIRST (row 1 of card) -->
+          <p class="bento-sub">Design that makes both sides happy and work better together</p>
           <div class="happy-row">
             <span class="happy-text">Happy Designer</span>
             <div class="happy-circles">
-              <div class="h-circle"></div>
-              <div class="h-circle"></div>
-              <div class="h-circle"></div>
+              <!-- gradient avatars with initials — like real clients -->
+              <div class="h-circle" style="background:linear-gradient(135deg,#FF9A8B,#FF6B6B);">A</div>
+              <div class="h-circle" style="background:linear-gradient(135deg,#43C6AC,#4CAF50);">S</div>
+              <div class="h-circle" style="background:linear-gradient(135deg,#7B97EA,#9B59B6);">M</div>
             </div>
             <span class="happy-text">Happy Client</span>
           </div>
-          <p class="bento-sub">Design that makes both sides happy and work better together</p>
         </article>
 
-        <!-- 4 — Detail-oriented -->
-        <article class="bento-card reveal reveal-delay-1">
+        <!-- C4: Detail-oriented — col 3, rows 2-3 (tall) -->
+        <article class="bento-card bento-c4 reveal reveal-delay-1">
           <h3 class="bento-title">Detail-<br>oriented</h3>
-          <svg class="bento-deco" width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-            <circle cx="22" cy="22" r="10" stroke="currentColor" stroke-width="1.2"/>
-            <circle cx="22" cy="22" r="2"  fill="currentColor"/>
-            <line x1="22" y1="4"  x2="22" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="22" y1="32" x2="22" y2="40" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="4"  y1="22" x2="12" y2="22" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="32" y1="22" x2="40" y2="22" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-          </svg>
+          <!-- Visual: magnifying glass — large, centred -->
+          <div class="vis-magnify" aria-hidden="true">
+            <svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="52" cy="52" r="36" stroke="#1a1a1a" stroke-width="7"/>
+              <line x1="78" y1="78" x2="112" y2="118" stroke="#1a1a1a" stroke-width="9" stroke-linecap="round"/>
+              <line x1="34" y1="52" x2="70" y2="52" stroke="#E0E0E0" stroke-width="2"/>
+              <line x1="52" y1="34" x2="52" y2="70" stroke="#E0E0E0" stroke-width="2"/>
+              <circle cx="52" cy="52" r="6" fill="#1a1a1a" opacity="0.15"/>
+            </svg>
+          </div>
         </article>
 
-        <!-- 5 — Always evolving -->
-        <article class="bento-card reveal">
+        <!-- C5: Always evolving — col 1, row 3 -->
+        <article class="bento-card bento-c5 reveal">
           <h3 class="bento-title">Always<br>evolving</h3>
-          <svg class="bento-deco" width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-            <path d="M22 8 A14 14 0 1 1 8 22" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-            <path d="M5 14 L8 22 L16 19" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <!-- Visual: upward bar chart -->
+          <div class="vis-chart" aria-hidden="true">
+            <div class="chart-bar" style="height:35%;background:#C8E6C9;"></div>
+            <div class="chart-bar" style="height:55%;background:#A5D6A7;"></div>
+            <div class="chart-bar" style="height:70%;background:#81C784;"></div>
+            <div class="chart-bar" style="height:85%;background:#66BB6A;"></div>
+            <div class="chart-bar" style="height:100%;background:#43A047;"></div>
+          </div>
         </article>
 
-        <!-- 6 — Strategy & emotion -->
-        <article class="bento-card reveal reveal-delay-1">
+        <!-- C6: Strategy & emotion — col 2, row 3 -->
+        <article class="bento-card bento-c6 reveal reveal-delay-1">
           <h3 class="bento-title">Strategy &<br>emotion</h3>
-          <svg class="bento-deco" width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-            <path d="M22 6 C22 6 34 14 34 24 C34 31 28.6 36 22 36 C15.4 36 10 31 10 24 C10 14 22 6 22 6Z" stroke="currentColor" stroke-width="1.2"/>
-            <path d="M22 36 L22 42" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-            <path d="M16 42 L28 42" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-          </svg>
-        </article>
-
-        <!-- 7 — Pixel perfect -->
-        <article class="bento-card reveal reveal-delay-2">
-          <h3 class="bento-title">Pixel<br>perfect</h3>
-          <svg class="bento-deco" width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-            <rect x="6"  y="6"  width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.2"/>
-            <rect x="24" y="6"  width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.2"/>
-            <rect x="6"  y="24" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.2"/>
-            <rect x="24" y="24" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.2"/>
-          </svg>
+          <!-- Visual: split circle — left=chess dark, right=heart warm -->
+          <div class="vis-split" aria-hidden="true">
+            <div class="split-l">
+              <svg viewBox="0 0 60 80" fill="none"><rect x="15" y="60" width="30" height="6" rx="2" fill="#1a1a1a"/><rect x="20" y="52" width="20" height="10" rx="2" fill="#1a1a1a"/><ellipse cx="30" cy="44" rx="12" ry="8" fill="#1a1a1a"/><rect x="24" y="32" width="12" height="14" rx="2" fill="#1a1a1a"/><circle cx="30" cy="26" r="8" fill="#1a1a1a"/></svg>
+            </div>
+            <div class="split-r">
+              <svg viewBox="0 0 60 60" fill="none"><path d="M30 50 C30 50 8 36 8 20 C8 12 14 6 22 8 C26 9 29 12 30 15 C31 12 34 9 38 8 C46 6 52 12 52 20 C52 36 30 50 30 50Z" fill="#FF8A80"/></svg>
+            </div>
+          </div>
         </article>
 
       </div>
