@@ -1,3 +1,8 @@
+const supabaseUrl = "https://ivrrohxxbxhlhxohpwsu.supabase.co"
+const supabaseKey = "sb_publishable_CHNjIGQrfC_RxOnT_t9J7Q_XrGa4lzN"
+
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+
 /* ──────────────────────────────────────
    NAV: transparent → floating pill on scroll
 ────────────────────────────────────── */
@@ -72,5 +77,6 @@ const heroBg = document.querySelector('.hero-bg');
 
 window.addEventListener('scroll', () => {
   if (!heroBg) return;
-  heroBg.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+  heroBg.style.backgroundPosition = `center calc(30% + ${window.scrollY * 0.5}px)`;
 }, { passive: true });
+
