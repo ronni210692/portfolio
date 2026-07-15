@@ -1,8 +1,3 @@
-const supabaseUrl = "https://ivrrohxxbxhlhxohpwsu.supabase.co"
-const supabaseKey = "sb_publishable_CHNjIGQrfC_RxOnT_t9J7Q_XrGa4lzN"
-
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
-
 /* ──────────────────────────────────────
    NAV: transparent → floating pill on scroll
 ────────────────────────────────────── */
