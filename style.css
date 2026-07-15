@@ -198,7 +198,7 @@ body {
   left: 15px;
   right: 15px;
   bottom: 0;
-  background: url('bg_hero.png') center 30% / cover no-repeat;
+  background: url('assets/bg_hero_new.png') center 30% / cover no-repeat;
   border-radius: 30px 30px 0 0;
   z-index: 0;
 }
