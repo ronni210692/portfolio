@@ -940,6 +940,86 @@ body {
 }
 
 /* ══════════════════════════════
+   CONTACT + FOOTER
+══════════════════════════════ */
+.contact {
+  position: relative;
+  padding: 120px var(--page-px) 0;
+  background: #F7F6F7;
+  overflow: hidden;
+}
+
+/* footer image — fills bottom portion of section */
+.contact::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('assets/footer.jpg') center bottom / cover no-repeat;
+  z-index: 0;
+}
+
+/* fade from page bg at top so it blends in */
+.contact::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(to bottom, #F7F6F7 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.contact-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 28px;
+  padding-bottom: 120px;
+}
+
+.contact-title {
+  font-size: clamp(24px, 3.2vw, 46px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.22;
+  color: var(--black);
+}
+
+.contact-btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-details p {
+  font-size: 14px;
+  color: var(--gray);
+}
+
+.contact-details a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.contact-details a:hover {
+  color: var(--black);
+}
+
+/* ══════════════════════════════
    MOBILE
 ══════════════════════════════ */
 @media (max-width: 768px) {
