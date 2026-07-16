@@ -203,19 +203,19 @@ body {
   z-index: 0;
 }
 
-/* Subtle white fade at very bottom only */
+/* Fade to page background color */
 .hero-bg::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 18%;
+  height: 22%;
   background: linear-gradient(
     to bottom,
-    transparent            0%,
-    rgba(255,255,255,0.6)  60%,
-    rgba(255,255,255,0.92) 100%
+    transparent        0%,
+    rgba(247,246,247,0.65) 55%,
+    #F7F6F7            100%
   );
   pointer-events: none;
 }
@@ -344,7 +344,9 @@ body {
 }
 
 .projects-inner {
+  max-width: 1160px;
   width: 100%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -394,7 +396,7 @@ body {
 .card-img {
   display: flex;
   width: 100%;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 100 / 62;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -690,7 +692,7 @@ body {
 ══════════════════════════════ */
 .about {
   padding: 60px var(--page-px) 120px;
-  background: var(--white);
+  background: #F7F6F7;
 }
 
 .about-inner {
