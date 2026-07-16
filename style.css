@@ -688,11 +688,215 @@ body {
 .br-mobile { display: none; }
 
 /* ══════════════════════════════
-   ABOUT SECTION
+   ABOUT — simple teaser
 ══════════════════════════════ */
 .about {
   padding: 60px var(--page-px) 120px;
   background: #F7F6F7;
+}
+
+/* ══════════════════════════════
+   ABOUT FULL — Beyond the Portfolio
+══════════════════════════════ */
+.about-full {
+  padding: 80px var(--page-px) 120px;
+  background: #F7F6F7;
+}
+
+.about-full-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-full-title {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--black);
+  margin: 12px 0 14px;
+  text-align: center;
+}
+
+.about-full-sub {
+  font-size: clamp(13px, 1.1vw, 15px);
+  color: var(--gray);
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+/* ── 2-col layout ── */
+.about-cols {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Left: sticky image */
+.about-img-wrap {
+  position: sticky;
+  top: 96px;
+}
+
+.about-img-ph {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: #D9D4CE;
+  border-radius: 24px;
+}
+
+/* Right: scrolling cards */
+.about-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.about-card-title {
+  font-size: clamp(18px, 1.8vw, 26px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--black);
+  text-align: center;
+}
+
+.about-card-desc {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.75;
+  text-align: center;
+}
+
+.about-facts {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.about-facts li {
+  font-size: 13px;
+  color: var(--gray);
+  text-align: center;
+}
+
+/* Timeline */
+.about-timeline {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.timeline-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 0;
+  position: relative;
+}
+
+.timeline-item + .timeline-item {
+  border-top: none;
+}
+
+.timeline-item + .timeline-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 28px;
+  background: #E0E0E0;
+  margin-top: -14px;
+}
+
+.timeline-item strong {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--black);
+}
+
+.timeline-item span {
+  font-size: 12px;
+  color: var(--gray);
+}
+
+.cv-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--gray);
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 980px;
+  border: 1px solid #e8e8e8;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.cv-link:hover {
+  color: var(--black);
+  border-color: #ccc;
+}
+
+/* Fun facts */
+.about-funfacts {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.funfact-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 18px 0;
+  gap: 3px;
+  position: relative;
+}
+
+.funfact-item + .funfact-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 22px;
+  background: #E0E0E0;
+  margin-top: -11px;
+}
+
+.funfact-item p {
+  font-size: 14px;
+  color: var(--black);
+  line-height: 1.55;
+}
+
+.funfact-sub {
+  font-size: 13px !important;
+  color: var(--gray) !important;
 }
 
 .about-inner {
@@ -847,5 +1051,22 @@ body {
 
   .about-text {
     line-height: 1.2;
+  }
+
+  /* ── About Full: stack on mobile ── */
+  .about-cols {
+    grid-template-columns: 1fr;
+  }
+
+  .about-img-wrap {
+    position: static;
+  }
+
+  .about-img-ph {
+    aspect-ratio: 4 / 3;
+  }
+
+  .about-card {
+    padding: 24px 20px;
   }
 }
