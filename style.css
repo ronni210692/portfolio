@@ -340,7 +340,7 @@ body {
 ══════════════════════════════ */
 .projects {
   padding: 80px var(--page-px) 120px;
-  background: var(--white);
+  background: #f5f5f3;
 }
 
 .projects-inner {
@@ -379,25 +379,27 @@ body {
 .project-card {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  background: var(--white);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Coloured image area */
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Coloured image area — no radius, card clips it */
 .card-img {
   display: flex;
   width: 100%;
   aspect-ratio: 3 / 2;
-  border-radius: 24px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   text-decoration: none;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-img:hover {
-  transform: scale(1.015);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
 }
 
 /* Placeholder image icon */
@@ -405,12 +407,13 @@ body {
   opacity: 0.45;
 }
 
-/* Info row below card */
+/* Info row — white bar at bottom of card */
 .card-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4px;
+  padding: 20px 24px;
+  background: var(--white);
 }
 
 .card-name {
@@ -422,14 +425,17 @@ body {
 
 .card-tags {
   display: flex;
-  gap: 16px;
+  gap: 8px;
   list-style: none;
 }
 
 .card-tags li {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--gray);
+  border: 1px solid #e0e0e0;
+  border-radius: 980px;
+  padding: 3px 12px;
 }
 
 /* ══════════════════════════════
@@ -705,7 +711,8 @@ body {
   gap: 6px;
   padding: 6px 16px;
   border-radius: 980px;
-  background: #fce8e6;
+  background: var(--white);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
   color: var(--black);
   font-size: 13px;
   font-weight: 400;
@@ -827,8 +834,8 @@ body {
     gap: 20px;
   }
 
-  .card-img {
-    border-radius: 20px;
+  .card-meta {
+    padding: 16px 18px;
   }
 
   /* ── About: reduce gap, tighter line-height ── */
