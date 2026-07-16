@@ -1019,6 +1019,24 @@ body {
   color: var(--black);
 }
 
+.site-footer {
+  position: relative;
+  z-index: 2;
+  padding: 0 var(--page-px) 40px;
+}
+
+.footer-line {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.12);
+  margin-bottom: 24px;
+}
+
+.footer-copy {
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray);
+}
+
 /* ══════════════════════════════
    MOBILE
 ══════════════════════════════ */
