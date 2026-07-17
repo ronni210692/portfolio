@@ -29,7 +29,12 @@
     }
     if (c.hero_subtitle) {
       const el = document.getElementById('hero-subtitle');
-      if (el) el.textContent = c.hero_subtitle;
+      if (el) {
+        el.innerHTML = c.hero_subtitle
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/~~(.+?)~~/g, '<span class="strike">$1</span>')
+          .replace(/\n/g, '<br>');
+      }
     }
     if (c.hero_bg_image) {
       const el = document.querySelector('.hero-bg');
