@@ -37,6 +37,10 @@
     }
 
     /* About teaser */
+    if (c.about_teaser_pill) {
+      const el = document.getElementById('about-teaser-pill');
+      if (el) el.textContent = c.about_teaser_pill;
+    }
     if (c.about_teaser) {
       const el = document.getElementById('about-teaser');
       if (el) {
@@ -114,6 +118,64 @@
           }
         }
         el.innerHTML = items.join('');
+      }
+    }
+
+    /* Projects section headings */
+    if (c.projects_pill) {
+      const el = document.getElementById('projects-pill');
+      if (el) el.textContent = c.projects_pill;
+    }
+    if (c.projects_title) {
+      const el = document.getElementById('projects-title');
+      if (el) el.textContent = c.projects_title;
+    }
+    if (c.projects_sub) {
+      const el = document.getElementById('projects-sub');
+      if (el) el.textContent = c.projects_sub;
+    }
+
+    /* About Full section headings */
+    if (c.about_full_pill) {
+      const el = document.getElementById('about-full-pill');
+      if (el) el.textContent = c.about_full_pill;
+    }
+    if (c.about_full_title) {
+      const el = document.getElementById('about-full-title');
+      if (el) el.textContent = c.about_full_title;
+    }
+    if (c.about_full_sub) {
+      const el = document.getElementById('about-full-sub');
+      if (el) el.textContent = c.about_full_sub;
+    }
+
+    /* Contact pill */
+    if (c.contact_pill) {
+      const el = document.getElementById('contact-pill');
+      if (el) el.textContent = c.contact_pill;
+    }
+
+    /* Nav links */
+    if (c.nav_links) {
+      try {
+        const links = JSON.parse(c.nav_links);
+        const navEl = document.getElementById('nav-links');
+        const mobileMenu = document.getElementById('mobile-menu')?.querySelector('ul');
+        if (navEl && links.length) {
+          navEl.innerHTML = links.map(l => `<li><a href="${l.url}">${l.label}</a></li>`).join('');
+        }
+        if (mobileMenu && links.length) {
+          mobileMenu.innerHTML = links.map(l =>
+            `<li><a href="${l.url}" onclick="closeMobileMenu()">${l.label}</a></li>`
+          ).join('') + `<li><a href="${c.nav_cta_url||'#contact'}" onclick="closeMobileMenu()">${c.nav_cta_label||'Contact'}</a></li>`;
+        }
+      } catch {}
+    }
+    if (c.nav_cta_label || c.nav_cta_url) {
+      const el = document.getElementById('nav-cta');
+      if (el) {
+        if (c.nav_cta_label) el.textContent = c.nav_cta_label;
+        if (c.nav_cta_url)   el.href = c.nav_cta_url;
       }
     }
 
