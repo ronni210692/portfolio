@@ -11,7 +11,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --sidebar-bg: #1a1a1a;
       --sidebar-w: 230px;
       --accent: #2271b1;
       --black: #1a1a1a;
@@ -25,302 +24,156 @@
 
     body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--black); min-height: 100vh; font-size: 14px; }
 
-    /* ── LOGIN ── */
-    #login-screen {
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; background: var(--bg);
-    }
-    .login-card {
-      background: var(--white); border-radius: 4px; padding: 40px;
-      width: 340px; box-shadow: 0 1px 3px rgba(0,0,0,.13);
-    }
-    .login-card h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; }
-    .login-card p  { color: var(--gray); font-size: .85rem; margin-bottom: 24px; }
-    .login-card input {
-      width: 100%; padding: 10px 12px; border: 1px solid var(--border);
-      border-radius: 4px; font-family: inherit; font-size: .95rem;
-      outline: none; transition: border-color .15s;
-    }
-    .login-card input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-    .login-card button {
-      width: 100%; margin-top: 12px; padding: 10px;
-      background: var(--accent); color: var(--white);
-      border: none; border-radius: 4px; font-family: inherit;
-      font-size: .95rem; font-weight: 600; cursor: pointer;
-    }
-    .login-card button:hover { background: #135e96; }
-    #login-err { color: var(--danger); font-size: .8rem; margin-top: 8px; display: none; }
+    /* LOGIN */
+    #login-screen { display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--bg); }
+    .login-card { background:var(--white); border-radius:4px; padding:40px; width:340px; box-shadow:0 1px 3px rgba(0,0,0,.13); }
+    .login-card h1 { font-size:1.3rem; font-weight:700; margin-bottom:6px; }
+    .login-card p  { color:var(--gray); font-size:.85rem; margin-bottom:24px; }
+    .login-card input { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:4px; font-family:inherit; font-size:.95rem; outline:none; transition:border-color .15s; }
+    .login-card input:focus { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+    .login-card button { width:100%; margin-top:12px; padding:10px; background:var(--accent); color:var(--white); border:none; border-radius:4px; font-family:inherit; font-size:.95rem; font-weight:600; cursor:pointer; }
+    .login-card button:hover { background:#135e96; }
+    #login-err { color:var(--danger); font-size:.8rem; margin-top:8px; display:none; }
 
-    /* ── LAYOUT ── */
-    #admin { display: none; }
-    .layout { display: flex; min-height: 100vh; }
+    /* LAYOUT */
+    #admin { display:none; }
+    .layout { display:flex; min-height:100vh; }
 
-    /* Sidebar */
-    .sidebar {
-      width: var(--sidebar-w); background: var(--sidebar-bg); color: #eee;
-      display: flex; flex-direction: column; position: fixed;
-      top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto;
-    }
-    .sidebar-logo {
-      padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    .sidebar-logo strong { font-size: 1rem; color: #fff; display: block; }
-    .sidebar-logo span { font-size: .72rem; color: #aaa; }
+    /* SIDEBAR */
+    .sidebar { width:var(--sidebar-w); background:#1a1a1a; color:#eee; display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:100; overflow-y:auto; }
+    .sidebar-logo { padding:20px 16px 16px; border-bottom:1px solid rgba(255,255,255,.08); }
+    .sidebar-logo strong { font-size:1rem; color:#fff; display:block; }
+    .sidebar-logo span { font-size:.72rem; color:#aaa; }
+    .nav-group-label { padding:16px 16px 4px; font-size:.68rem; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:#888; }
+    .sidebar-nav a { display:flex; align-items:center; gap:8px; padding:8px 16px; color:#ccc; text-decoration:none; font-size:.875rem; transition:color .12s,background .12s; border-left:3px solid transparent; }
+    .sidebar-nav a:hover { color:#fff; background:rgba(255,255,255,.06); }
+    .sidebar-nav a.active { color:#fff; background:rgba(255,255,255,.1); border-left-color:#72aee6; font-weight:600; }
+    .sidebar-nav a.sub { padding-left:38px; font-size:.82rem; color:#aaa; }
+    .sidebar-nav a.sub.active { color:#fff; border-left-color:#72aee6; }
+    .sidebar-footer { margin-top:auto; padding:16px; border-top:1px solid rgba(255,255,255,.08); }
+    .sidebar-footer a { color:#aaa; text-decoration:none; font-size:.8rem; }
+    .sidebar-footer a:hover { color:#fff; }
 
-    .nav-group-label {
-      padding: 16px 16px 4px; font-size: .68rem; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .08em; color: #888;
-    }
-    .sidebar-nav a {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 16px; color: #ccc; text-decoration: none;
-      font-size: .875rem; font-weight: 400; transition: color .12s, background .12s;
-      border-left: 3px solid transparent;
-    }
-    .sidebar-nav a:hover { color: #fff; background: rgba(255,255,255,.06); }
-    .sidebar-nav a.active { color: #fff; background: rgba(255,255,255,.1); border-left-color: #72aee6; font-weight: 600; }
-    .sidebar-nav a.sub {
-      padding-left: 38px; font-size: .82rem; color: #aaa;
-    }
-    .sidebar-nav a.sub.active { color: #fff; border-left-color: #72aee6; }
-    .sidebar-footer {
-      margin-top: auto; padding: 16px;
-      border-top: 1px solid rgba(255,255,255,.08);
-    }
-    .sidebar-footer a { color: #aaa; text-decoration: none; font-size: .8rem; }
-    .sidebar-footer a:hover { color: #fff; }
+    /* MAIN */
+    .main { margin-left:var(--sidebar-w); flex:1; padding:0 40px 40px; max-width:900px; }
 
-    /* Main */
-    .main {
-      margin-left: var(--sidebar-w); flex: 1;
-      padding: 32px 40px; max-width: 900px;
+    /* STICKY SAVE BAR */
+    .page-save-bar {
+      position:sticky; top:0; z-index:80;
+      background:var(--white); border-bottom:1px solid var(--border);
+      padding:12px 0; margin-bottom:24px;
+      display:flex; align-items:center; justify-content:space-between;
+      box-shadow:0 2px 6px rgba(0,0,0,.07);
     }
+    .page-save-bar .page-title { font-weight:700; font-size:.95rem; }
+    .page-save-bar .save-side { display:flex; align-items:center; gap:10px; }
+    .btn-save-main { background:var(--black); color:#fff; border:none; border-radius:3px; padding:9px 24px; font-family:inherit; font-size:.88rem; font-weight:600; cursor:pointer; transition:background .15s; }
+    .btn-save-main:hover { background:#333; }
+    .btn-save-main:disabled { background:#999; cursor:not-allowed; }
 
-    /* ── SHARED ── */
-    .view-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 24px;
-    }
-    .view-header h1 { font-size: 1.4rem; font-weight: 700; }
+    /* SHARED */
+    .view-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; padding-top:32px; }
+    .view-header h1 { font-size:1.4rem; font-weight:700; }
+    .back-btn { background:none; border:none; cursor:pointer; color:var(--accent); font-family:inherit; font-size:.85rem; padding:0; display:flex; align-items:center; gap:4px; }
+    .back-btn:hover { text-decoration:underline; }
 
-    .back-btn {
-      background: none; border: none; cursor: pointer;
-      color: var(--accent); font-family: inherit; font-size: .85rem;
-      padding: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;
-    }
-    .back-btn:hover { text-decoration: underline; }
+    /* SECTION CARDS */
+    .section-card { background:var(--white); border:1px solid var(--border); border-radius:4px; margin-bottom:16px; overflow:hidden; }
+    .section-card-header { background:#f6f7f7; border-bottom:1px solid var(--border); padding:10px 16px; font-weight:600; font-size:.88rem; display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
+    .section-card-header::after { content:'▾'; font-size:.8rem; color:#666; }
+    .section-card-header.collapsed::after { content:'▸'; }
+    .section-card-body { padding:20px; }
+    .section-card-body.collapsed { display:none; }
+    .sub-label { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--gray); margin:20px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--border); }
 
-    /* Section card */
-    .section-card {
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: 4px; margin-bottom: 20px; overflow: hidden;
-    }
-    .section-card-header {
-      background: #f6f7f7; border-bottom: 1px solid var(--border);
-      padding: 10px 16px; font-weight: 600; font-size: .88rem;
-      display: flex; align-items: center; justify-content: space-between;
-      cursor: pointer; user-select: none;
-    }
-    .section-card-header::after { content: '▾'; font-size: .8rem; color: #666; }
-    .section-card-header.collapsed::after { content: '▸'; }
-    .section-card-body { padding: 20px; }
-    .section-card-body.collapsed { display: none; }
+    /* FIELDS */
+    .field { margin-bottom:14px; }
+    .field label { display:block; font-size:.78rem; font-weight:600; color:var(--gray); margin-bottom:4px; }
+    .field input, .field textarea { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:4px; font-family:inherit; font-size:.875rem; outline:none; transition:border-color .15s; background:#fff; }
+    .field input:focus, .field textarea:focus { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+    .field textarea { resize:vertical; min-height:70px; }
+    .field .hint { font-size:.72rem; color:#999; margin-top:3px; }
+    .field-row { display:flex; gap:12px; }
+    .field-row .field { flex:1; }
 
-    .sub-label {
-      font-size: .72rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .06em; color: var(--gray); margin: 20px 0 10px;
-      padding-bottom: 6px; border-bottom: 1px solid var(--border);
-    }
+    /* UPLOAD */
+    .upload-area { display:flex; align-items:center; gap:8px; padding:10px 14px; border:1px dashed var(--border); border-radius:4px; cursor:pointer; background:#fafafa; font-size:.82rem; color:var(--gray); transition:border-color .15s; }
+    .upload-area:hover { border-color:var(--accent); color:var(--black); }
+    .upload-preview { margin-top:8px; max-height:140px; max-width:100%; border-radius:4px; display:none; object-fit:cover; }
+    .current-img { display:block; max-height:100px; max-width:140px; border-radius:4px; margin-bottom:8px; object-fit:cover; }
 
-    /* Fields */
-    .field { margin-bottom: 14px; }
-    .field label {
-      display: block; font-size: .78rem; font-weight: 600;
-      color: var(--gray); margin-bottom: 4px;
-    }
-    .field input, .field textarea, .field select {
-      width: 100%; padding: 8px 10px; border: 1px solid var(--border);
-      border-radius: 4px; font-family: inherit; font-size: .875rem;
-      outline: none; transition: border-color .15s; background: #fff;
-    }
-    .field input:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-    .field textarea { resize: vertical; min-height: 70px; }
-    .field .hint { font-size: .72rem; color: #999; margin-top: 3px; }
-    .field-row { display: flex; gap: 12px; }
-    .field-row .field { flex: 1; }
+    /* BUTTONS */
+    .btn-save { background:var(--accent); color:#fff; border:none; border-radius:3px; padding:8px 18px; font-family:inherit; font-size:.85rem; font-weight:600; cursor:pointer; transition:background .15s; }
+    .btn-save:hover { background:#135e96; }
+    .btn-save:disabled { background:#b2c9e0; cursor:not-allowed; }
+    .btn-outline { background:#fff; color:var(--black); border:1px solid var(--border); border-radius:3px; padding:7px 14px; font-family:inherit; font-size:.82rem; font-weight:500; cursor:pointer; transition:.15s; }
+    .btn-outline:hover { border-color:#999; }
+    .btn-danger { background:transparent; color:var(--danger); border:1px solid var(--danger); border-radius:3px; padding:5px 10px; font-family:inherit; font-size:.78rem; cursor:pointer; transition:.15s; }
+    .btn-danger:hover { background:var(--danger); color:#fff; }
+    .btn-link { background:none; border:none; color:var(--accent); cursor:pointer; font-family:inherit; font-size:.82rem; padding:0; }
+    .btn-link:hover { text-decoration:underline; }
 
-    /* Upload */
-    .upload-area {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 14px; border: 1px dashed var(--border);
-      border-radius: 4px; cursor: pointer; background: #fafafa;
-      font-size: .82rem; color: var(--gray); transition: border-color .15s;
-    }
-    .upload-area:hover { border-color: var(--accent); color: var(--black); }
-    .upload-preview {
-      margin-top: 8px; max-height: 140px; max-width: 100%;
-      border-radius: 4px; display: none; object-fit: cover;
-    }
-    .current-img {
-      display: block; max-height: 100px; max-width: 140px;
-      border-radius: 4px; margin-bottom: 8px; object-fit: cover;
-    }
+    .save-msg { font-size:.8rem; font-weight:600; opacity:0; transition:opacity .3s; max-width:280px; }
+    .save-msg.show { opacity:1; }
+    .save-msg.ok  { color:var(--success); }
+    .save-msg.err { color:var(--danger); }
 
-    /* Buttons */
-    .btn-save {
-      background: var(--accent); color: #fff; border: none;
-      border-radius: 3px; padding: 8px 18px; font-family: inherit;
-      font-size: .85rem; font-weight: 600; cursor: pointer; transition: background .15s;
-    }
-    .btn-save:hover { background: #135e96; }
-    .btn-save:disabled { background: #b2c9e0; cursor: not-allowed; }
-    .btn-outline {
-      background: #fff; color: var(--black); border: 1px solid var(--border);
-      border-radius: 3px; padding: 7px 14px; font-family: inherit;
-      font-size: .82rem; font-weight: 500; cursor: pointer; transition: .15s;
-    }
-    .btn-outline:hover { border-color: #999; }
-    .btn-danger {
-      background: transparent; color: var(--danger); border: 1px solid var(--danger);
-      border-radius: 3px; padding: 5px 10px; font-family: inherit;
-      font-size: .78rem; cursor: pointer; transition: .15s;
-    }
-    .btn-danger:hover { background: var(--danger); color: #fff; }
-    .btn-link {
-      background: none; border: none; color: var(--accent); cursor: pointer;
-      font-family: inherit; font-size: .82rem; padding: 0;
-    }
-    .btn-link:hover { text-decoration: underline; }
+    /* PAGES LIST */
+    .page-row { display:flex; align-items:center; gap:14px; background:var(--white); border:1px solid var(--border); border-radius:4px; padding:14px 16px; cursor:pointer; transition:box-shadow .15s; }
+    .page-row:hover { box-shadow:0 1px 4px rgba(0,0,0,.12); }
+    .page-row-info { flex:1; }
+    .page-row-info strong { font-size:.92rem; display:block; }
+    .page-row-info span { font-size:.78rem; color:var(--gray); }
 
-    .save-row {
-      display: flex; align-items: center; gap: 10px; margin-top: 6px;
-      padding-top: 14px; border-top: 1px solid var(--border);
-    }
-    .save-msg {
-      font-size: .78rem; font-weight: 600; opacity: 0; transition: opacity .3s;
-    }
-    .save-msg.show { opacity: 1; }
-    .save-msg.ok  { color: var(--success); }
-    .save-msg.err { color: var(--danger); }
+    /* PROJECTS PREVIEW */
+    .projects-preview-bar { display:flex; align-items:center; justify-content:space-between; margin:16px 0 8px; padding:10px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .projects-preview-bar span { font-size:.78rem; font-weight:600; color:var(--gray); }
+    .proj-prev-item { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid #f0f0f0; }
+    .proj-prev-item:last-child { border-bottom:none; }
+    .proj-prev-swatch { width:32px; height:24px; border-radius:3px; border:1px solid rgba(0,0,0,.08); flex-shrink:0; }
+    .proj-prev-name { flex:1; font-size:.85rem; }
+    .proj-prev-tags { font-size:.75rem; color:var(--gray); }
+    .proj-prev-order { font-size:.72rem; color:#bbb; }
 
-    /* ── PAGES LIST ── */
-    .page-row {
-      display: flex; align-items: center; gap: 14px;
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: 4px; padding: 14px 16px; cursor: pointer;
-      transition: box-shadow .15s;
-    }
-    .page-row:hover { box-shadow: 0 1px 4px rgba(0,0,0,.12); }
-    .page-row-icon { font-size: 1.4rem; flex-shrink: 0; }
-    .page-row-info { flex: 1; }
-    .page-row-info strong { font-size: .92rem; display: block; }
-    .page-row-info span { font-size: .78rem; color: var(--gray); }
+    /* PROJECTS */
+    .project-list-row { display:flex; align-items:center; gap:12px; background:var(--white); border:1px solid var(--border); border-radius:4px; padding:10px 14px; margin-bottom:6px; }
+    .project-list-img { width:48px; height:36px; border-radius:3px; object-fit:cover; flex-shrink:0; }
+    .project-list-ph { width:48px; height:36px; border-radius:3px; flex-shrink:0; border:1px solid rgba(0,0,0,.08); }
+    .project-list-info { flex:1; min-width:0; }
+    .project-list-info strong { font-size:.88rem; display:block; }
+    .project-list-info span { font-size:.75rem; color:var(--gray); }
+    .project-list-actions { display:flex; gap:6px; }
+    .project-form-card { background:var(--white); border:1px solid var(--border); border-radius:4px; padding:20px; margin-top:16px; }
+    .project-form-card h3 { font-size:.95rem; font-weight:600; margin-bottom:16px; }
 
-    /* Projects preview in homepage editor */
-    .projects-preview-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      margin: 16px 0 8px; padding: 10px 0;
-      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    }
-    .projects-preview-bar span { font-size: .78rem; font-weight: 600; color: var(--gray); }
-    .proj-prev-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 6px 0; border-bottom: 1px solid #f0f0f0;
-    }
-    .proj-prev-item:last-child { border-bottom: none; }
-    .proj-prev-swatch {
-      width: 32px; height: 24px; border-radius: 3px;
-      border: 1px solid rgba(0,0,0,.08); flex-shrink: 0;
-    }
-    .proj-prev-name { flex: 1; font-size: .85rem; }
-    .proj-prev-tags { font-size: .75rem; color: var(--gray); }
-    .proj-prev-order { font-size: .72rem; color: #bbb; }
+    /* TAGS */
+    .tags-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+    .tag-chip { background:#f0f0f1; border-radius:20px; padding:3px 10px; font-size:.75rem; display:flex; align-items:center; gap:4px; }
+    .tag-chip button { background:none; border:none; cursor:pointer; color:#888; font-size:.9rem; padding:0 1px; line-height:1; }
+    .tag-add-row { display:flex; gap:8px; align-items:center; }
+    .tag-add-row input { flex:1; }
 
-    /* ── PROJECTS ── */
-    .projects-toolbar {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .project-list-row {
-      display: flex; align-items: center; gap: 12px;
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: 4px; padding: 10px 14px; margin-bottom: 6px;
-    }
-    .project-list-img {
-      width: 48px; height: 36px; border-radius: 3px;
-      object-fit: cover; flex-shrink: 0;
-    }
-    .project-list-ph {
-      width: 48px; height: 36px; border-radius: 3px;
-      flex-shrink: 0; border: 1px solid rgba(0,0,0,.08);
-    }
-    .project-list-info { flex: 1; min-width: 0; }
-    .project-list-info strong { font-size: .88rem; display: block; }
-    .project-list-info span { font-size: .75rem; color: var(--gray); }
-    .project-list-actions { display: flex; gap: 6px; }
+    /* COLOR */
+    .color-row { display:flex; align-items:center; gap:8px; }
+    .color-swatch { width:30px; height:30px; border-radius:4px; border:1px solid var(--border); cursor:pointer; flex-shrink:0; }
 
-    .project-form-card {
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: 4px; padding: 20px; margin-top: 16px;
-    }
-    .project-form-card h3 { font-size: .95rem; font-weight: 600; margin-bottom: 16px; }
+    /* EXPERIENCE / MENU ROWS */
+    .exp-row, .menu-row { display:flex; gap:8px; margin-bottom:8px; align-items:center; }
+    .exp-row input, .menu-row input { flex:1; }
+    .drag-handle { cursor:grab; color:#ccc; padding:0 4px; }
 
-    /* Tags */
-    .tags-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-    .tag-chip {
-      background: #f0f0f1; border-radius: 20px;
-      padding: 3px 10px; font-size: .75rem;
-      display: flex; align-items: center; gap: 4px;
-    }
-    .tag-chip button {
-      background: none; border: none; cursor: pointer;
-      color: #888; font-size: .9rem; padding: 0 1px; line-height: 1;
-    }
-    .tag-add-row { display: flex; gap: 8px; align-items: center; }
-    .tag-add-row input { flex: 1; }
+    /* TOAST */
+    #toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--black); color:#fff; padding:10px 20px; border-radius:4px; font-size:.85rem; font-weight:500; opacity:0; transition:opacity .25s; pointer-events:none; z-index:9999; white-space:nowrap; }
+    #toast.show { opacity:1; }
+    #toast.err { background:var(--danger); }
 
-    /* Color picker */
-    .color-row { display: flex; align-items: center; gap: 8px; }
-    .color-swatch {
-      width: 30px; height: 30px; border-radius: 4px;
-      border: 1px solid var(--border); cursor: pointer; flex-shrink: 0;
-    }
-
-    /* Experience rows */
-    .exp-row {
-      display: flex; gap: 8px; margin-bottom: 8px; align-items: center;
-    }
-    .exp-row input { flex: 1; }
-
-    /* ── MENUS ── */
-    .menu-row {
-      display: flex; gap: 8px; margin-bottom: 8px; align-items: center;
-    }
-    .menu-row input { flex: 1; }
-    .drag-handle { cursor: grab; color: #ccc; padding: 0 4px; font-size: 1rem; }
-
-    /* ── TOAST ── */
-    #toast {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: var(--black); color: #fff; padding: 10px 20px;
-      border-radius: 4px; font-size: .85rem; font-weight: 500;
-      opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 9999;
-    }
-    #toast.show { opacity: 1; }
-    #toast.err { background: var(--danger); }
-
-    /* Spinner */
-    .spinner {
-      display: inline-block; width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,.3); border-top-color: #fff;
-      border-radius: 50%; animation: spin .6s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* SPINNER */
+    .spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .6s linear infinite; vertical-align:middle; }
+    @keyframes spin { to { transform:rotate(360deg); } }
   </style>
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
 <div id="login-screen">
   <div class="login-card">
     <h1>Portfolio Admin</h1>
@@ -331,7 +184,6 @@
   </div>
 </div>
 
-<!-- ── ADMIN ── -->
 <div id="admin">
   <div class="layout">
     <aside class="sidebar">
@@ -339,20 +191,20 @@
         <strong>Ronni Admin</strong>
         <span>Portfolio CMS</span>
       </div>
-      <nav class="sidebar-nav" id="sidebar-nav">
+      <nav class="sidebar-nav">
         <div class="nav-group-label">Content</div>
-        <a href="#" class="nav-item active" onclick="return nav('pages-list',this)">
+        <a href="#" class="nav-item active" onclick="return navTo('pages-list',this)">
           <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
           Pages
         </a>
-        <a href="#" class="nav-item sub" id="nav-homepage" onclick="return nav('page-homepage',this)">
+        <a href="#" class="nav-item sub" id="nav-homepage" onclick="return navTo('page-homepage',this)">
           Homepage
         </a>
-        <a href="#" class="nav-item" onclick="return nav('projects',this)">
+        <a href="#" class="nav-item" id="nav-projects" onclick="return navTo('projects',this)">
           <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
           Projects
         </a>
-        <a href="#" class="nav-item" onclick="return nav('menus',this)">
+        <a href="#" class="nav-item" onclick="return navTo('menus',this)">
           <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           Menus
         </a>
@@ -368,7 +220,6 @@
 <div id="toast"></div>
 
 <script>
-/* ── CONFIG ── */
 const SUPABASE_URL = 'https://ivrrohxxbxhlhxohpwsu.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_CHNjIGQrfC_RxOnT_t9J7Q_XrGa4lzN';
 const ADMIN_PASS   = 'Rc210692';
@@ -377,36 +228,29 @@ const BUCKET       = 'portfolio-assets';
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* ── STATE ── */
-let S = { view: 'pages-list', content: {}, projects: [], editingProjectId: null };
+let S = { view: 'pages-list', content: {}, projects: [] };
 
-/* ── DEFAULT CONTENT (seeds DB on first run) ── */
+/* ── DEFAULT CONTENT ── */
 const DEFAULTS = {
-  hero_line1:        'Design you can',
-  hero_italic:       'feel.',
-  hero_line2:        'Experiences that resonate.',
-  hero_subtitle:     "I'm Ronni, a UX/UI designer based in Mexico Israel.\nI believe in design where the sky is not the limit,\nbut just the beginning.",
-  about_teaser_pill: '• Design, for Me',
-  about_teaser:      'I design with clarity and intention, [[focusing on how things feel]] and work for people. I care about small details that make a difference.',
-  projects_pill:     '• My work',
-  projects_title:    'My case studies',
-  projects_sub:      "A collection of thoughtful digital experiences, shaped by users' needs and real-world problems.",
-  about_full_pill:   '• About me',
-  about_full_title:  'Beyond the Portfolio',
-  about_full_sub:    "The person behind the pixels – my story, experience, and a few fun facts along the way.",
-  about_who_title:   'Hi, I am Ronni\nA UX/UI Designer',
-  about_who_desc:    "I believe design should be more than functional; it should be intuitive. My focus is on bringing clarity to your vision – creating digital products that don't just solve problems, but feel effortless to use.",
-  about_facts:       "(2+ years of experience)\n(Currently working at Elevate Studio)\n(Always evolving)\n(Adore my kids)",
-  about_experience:  JSON.stringify([{company:'Elevate Studio',location:'Rehovot, Israel'},{company:'Yeshivat KT',location:'Mexico city, Mexico'}]),
-  about_funfacts:    "Mom of four\n(yes, coffee helps)\nI'll never say no to | sweet potato ravioli in rosé sauce.\nI lived in Mexico for five years, | and it still feels like home.",
-  contact_pill:      '• Contact me',
-  contact_title:     "I'm not just here to design products;\nI'm here to connect with people.",
-  contact_email:     'Ronni210692@gmail.com',
-  contact_tel:       '+972-542461587',
-  contact_linkedin:  'https://www.linkedin.com/in/ronni-cohen-ux',
-  nav_links:         JSON.stringify([{label:'About',url:'#about'},{label:'Projects',url:'#projects'},{label:'Resume',url:'#resume'}]),
-  nav_cta_label:     'Contact',
-  nav_cta_url:       '#contact',
+  hero_line1:'Design you can', hero_italic:'feel.', hero_line2:'Experiences that resonate.',
+  hero_subtitle:"I'm Ronni, a UX/UI designer based in Mexico Israel.\nI believe in design where the sky is not the limit,\nbut just the beginning.",
+  about_teaser_pill:'• Design, for Me',
+  about_teaser:'I design with clarity and intention, [[focusing on how things feel]] and work for people. I care about small details that make a difference.',
+  projects_pill:'• My work', projects_title:'My case studies',
+  projects_sub:"A collection of thoughtful digital experiences, shaped by users' needs and real-world problems.",
+  about_full_pill:'• About me', about_full_title:'Beyond the Portfolio',
+  about_full_sub:"The person behind the pixels – my story, experience, and a few fun facts along the way.",
+  about_who_title:'Hi, I am Ronni\nA UX/UI Designer',
+  about_who_desc:"I believe design should be more than functional; it should be intuitive. My focus is on bringing clarity to your vision – creating digital products that don't just solve problems, but feel effortless to use.",
+  about_facts:"(2+ years of experience)\n(Currently working at Elevate Studio)\n(Always evolving)\n(Adore my kids)",
+  about_experience:JSON.stringify([{company:'Elevate Studio',location:'Rehovot, Israel'},{company:'Yeshivat KT',location:'Mexico city, Mexico'}]),
+  about_funfacts:"Mom of four\n(yes, coffee helps)\nI'll never say no to | sweet potato ravioli in rosé sauce.\nI lived in Mexico for five years, | and it still feels like home.",
+  contact_pill:'• Contact me',
+  contact_title:"I'm not just here to design products;\nI'm here to connect with people.",
+  contact_email:'Ronni210692@gmail.com', contact_tel:'+972-542461587',
+  contact_linkedin:'https://www.linkedin.com/in/ronni-cohen-ux',
+  nav_links:JSON.stringify([{label:'About',url:'#about'},{label:'Projects',url:'#projects'},{label:'Resume',url:'#resume'}]),
+  nav_cta_label:'Contact', nav_cta_url:'#contact',
 };
 const DEFAULT_PROJECTS = [
   {name:'HandyMe',    bg_color:'#F5A02A', tags:['UX','UI','Mobile','App'], link:'#', display_order:0},
@@ -435,8 +279,8 @@ if (sessionStorage.getItem('admin_ok') === '1') {
   initAdmin();
 }
 
-/* ── NAVIGATION ── */
-function nav(view, el) {
+/* ── NAV ── */
+function navTo(view, el) {
   S.view = view;
   document.querySelectorAll('.sidebar-nav .nav-item').forEach(a => a.classList.remove('active'));
   if (el) el.classList.add('active');
@@ -446,32 +290,38 @@ function nav(view, el) {
 
 /* ── INIT ── */
 async function initAdmin() {
-  const [{data: rows}, {data: projects}] = await Promise.all([
+  const [{data:rows, error:ce}, {data:projects, error:pe}] = await Promise.all([
     db.from('site_content').select('*'),
     db.from('projects').select('*').order('display_order')
   ]);
 
-  if (!rows || rows.length === 0) {
-    await seedDefaults();
-  } else {
+  if (ce) { toast('DB error: ' + ce.message, true); console.error(ce); }
+  if (pe) { toast('Projects error: ' + pe.message, true); console.error(pe); }
+
+  if (rows && rows.length > 0) {
     rows.forEach(r => { S.content[r.key] = r.value; });
+  } else if (!ce) {
+    await seedContent();
   }
 
   S.projects = projects || [];
-  if (S.projects.length === 0) await seedProjects();
+  if (S.projects.length === 0 && !pe) {
+    await seedProjects();
+  }
 
   renderView();
 }
 
-async function seedDefaults() {
+async function seedContent() {
   const rows = Object.entries(DEFAULTS).map(([key,value]) => ({key, value, updated_at: new Date().toISOString()}));
-  await db.from('site_content').upsert(rows, {onConflict:'key'});
+  const {error} = await db.from('site_content').upsert(rows, {onConflict:'key'});
+  if (error) { toast('Seed error: ' + error.message, true); console.error(error); return; }
   Object.assign(S.content, DEFAULTS);
-  toast('Content loaded with defaults');
 }
 
 async function seedProjects() {
-  await db.from('projects').insert(DEFAULT_PROJECTS);
+  const {error} = await db.from('projects').insert(DEFAULT_PROJECTS);
+  if (error) { console.error('Seed projects error:', error); return; }
   const {data} = await db.from('projects').select('*').order('display_order');
   S.projects = data || [];
 }
@@ -480,13 +330,10 @@ async function seedProjects() {
 function renderView() {
   const main = document.getElementById('main');
   main.innerHTML = '';
-  switch (S.view) {
-    case 'pages-list':    main.innerHTML = tplPagesList(); break;
-    case 'page-homepage': main.innerHTML = tplHomepage(); afterHomepage(); break;
-    case 'projects':      main.innerHTML = tplProjects(); break;
-    case 'menus':         main.innerHTML = tplMenus(); afterMenus(); break;
-  }
-  document.querySelector('.sidebar-nav a[onclick*="'+S.view+'"]')?.classList.add('active');
+  if      (S.view === 'pages-list')    main.innerHTML = tplPagesList();
+  else if (S.view === 'page-homepage') { main.innerHTML = tplHomepage(); afterHomepage(); }
+  else if (S.view === 'projects')      main.innerHTML = tplProjects();
+  else if (S.view === 'menus')         { main.innerHTML = tplMenus(); afterMenus(); }
 }
 
 /* ── HELPERS ── */
@@ -495,32 +342,32 @@ function esc(s) {
 }
 function g(id) { return document.getElementById(id); }
 function val(id) { const el = g(id); return el ? el.value : ''; }
+
 function toast(msg, isErr) {
   const t = g('toast');
   t.textContent = msg;
   t.className = 'show' + (isErr ? ' err' : '');
-  setTimeout(() => t.className = '', 2600);
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = ''; }, 3000);
 }
-function showMsg(id, text, isErr) {
-  const el = g(id);
+function showSaveMsg(text, isErr) {
+  const el = g('msg-save-all');
   if (!el) return;
   el.textContent = text;
   el.className = 'save-msg show ' + (isErr ? 'err' : 'ok');
-  setTimeout(() => el.classList.remove('show'), 3000);
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 4000);
 }
 function previewUpload(input, imgId) {
   const file = input.files[0]; if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => { const img = g(imgId); if(img){img.src=e.target.result;img.style.display='block';} };
+  reader.onload = e => { const img = g(imgId); if(img){ img.src=e.target.result; img.style.display='block'; } };
   reader.readAsDataURL(file);
-}
-async function upsert(key, value) {
-  const {error} = await db.from('site_content').upsert({key, value, updated_at: new Date().toISOString()}, {onConflict:'key'});
-  return error;
 }
 async function upsertMany(obj) {
   const rows = Object.entries(obj).map(([key,value]) => ({key, value, updated_at: new Date().toISOString()}));
   const {error} = await db.from('site_content').upsert(rows, {onConflict:'key'});
+  if (error) console.error('Upsert error:', error);
   return error;
 }
 async function uploadFile(file, path) {
@@ -530,257 +377,115 @@ async function uploadFile(file, path) {
   const {data} = db.storage.from(BUCKET).getPublicUrl(path);
   return {url: data.publicUrl};
 }
-
-/* ── COLLAPSIBLE SECTIONS ── */
 function toggleSection(headerEl) {
   const body = headerEl.nextElementSibling;
   headerEl.classList.toggle('collapsed');
   body.classList.toggle('collapsed');
 }
 
-/* ────────────────────────────────────────
-   PAGES LIST
-──────────────────────────────────────── */
+/* ── PAGES LIST ── */
 function tplPagesList() {
-  return `
-    <div class="view-header"><h1>Pages</h1></div>
-    <div class="page-row" onclick="nav('page-homepage', document.getElementById('nav-homepage'))">
-      <div class="page-row-icon">📄</div>
-      <div class="page-row-info">
-        <strong>Homepage</strong>
-        <span>Hero · About · Projects · Contact</span>
-      </div>
-      <button class="btn-outline" style="flex-shrink:0">Edit →</button>
-    </div>
-  `;
+  return '<div class="view-header"><h1>Pages</h1></div>' +
+    '<div class="page-row" onclick="navTo(\'page-homepage\', g(\'nav-homepage\'))">' +
+    '<div class="page-row-info"><strong>Homepage</strong><span>Hero · About · Case Studies · Contact</span></div>' +
+    '<button class="btn-outline" style="flex-shrink:0">Edit →</button></div>';
 }
 
-/* ────────────────────────────────────────
-   HOMEPAGE EDITOR
-──────────────────────────────────────── */
+/* ── HOMEPAGE EDITOR ── */
 function tplHomepage() {
   const c = S.content;
+  const heroImgPrev = c.hero_bg_image ? '<img src="' + esc(c.hero_bg_image) + '" class="current-img" style="max-width:100%;max-height:120px;" />' : '';
+  const profilePrev = c.about_profile_image ? '<img src="' + esc(c.about_profile_image) + '" class="current-img" style="width:70px;height:90px;" />' : '';
+  const cvLink = c.contact_cv ? '<p class="hint" style="margin-bottom:8px">Current: <a href="' + esc(c.contact_cv) + '" target="_blank" style="color:var(--accent)">View CV ↗</a></p>' : '';
 
-  const heroImgPrev = c.hero_bg_image
-    ? `<img src="${esc(c.hero_bg_image)}" class="current-img" style="max-width:100%;max-height:120px;" />`
-    : '';
-  const profilePrev = c.about_profile_image
-    ? `<img src="${esc(c.about_profile_image)}" class="current-img" style="width:70px;height:90px;" />`
-    : '';
-  const cvLink = c.contact_cv
-    ? `<p class="hint" style="margin-bottom:8px">Current CV: <a href="${esc(c.contact_cv)}" target="_blank" style="color:var(--accent)">View ↗</a></p>`
-    : '';
-
-  const projectsPreview = S.projects.length
-    ? S.projects.map(p => `
-        <div class="proj-prev-item">
-          <div class="proj-prev-swatch" style="background:${esc(p.bg_color||'#eee')}"></div>
-          <span class="proj-prev-name">${esc(p.name)}</span>
-          <span class="proj-prev-tags">${(p.tags||[]).join(', ')}</span>
-          <span class="proj-prev-order">#${(p.display_order||0)+1}</span>
-        </div>`).join('')
+  const projPreview = S.projects.length
+    ? S.projects.map(function(p) {
+        return '<div class="proj-prev-item">' +
+          '<div class="proj-prev-swatch" style="background:' + esc(p.bg_color||'#eee') + '"></div>' +
+          '<span class="proj-prev-name">' + esc(p.name) + '</span>' +
+          '<span class="proj-prev-tags">' + (p.tags||[]).join(', ') + '</span>' +
+          '<span class="proj-prev-order">#' + ((p.display_order||0)+1) + '</span></div>';
+      }).join('')
     : '<p class="hint">No projects yet — go to Projects to add some.</p>';
 
-  return `
-    <button class="back-btn" onclick="nav('pages-list', document.querySelector('[onclick*=pages-list]'))">← Pages</button>
-    <div class="view-header"><h1>Homepage</h1></div>
+  var h = '';
 
-    <!-- HERO -->
-    <div class="section-card">
-      <div class="section-card-header" onclick="toggleSection(this)">Hero</div>
-      <div class="section-card-body">
-        <div class="field-row">
-          <div class="field">
-            <label>Line 1</label>
-            <input id="f-hero_line1" value="${esc(c.hero_line1||'')}" />
-          </div>
-          <div class="field" style="max-width:130px">
-            <label>Italic word</label>
-            <input id="f-hero_italic" value="${esc(c.hero_italic||'')}" />
-          </div>
-        </div>
-        <div class="field">
-          <label>Line 2</label>
-          <input id="f-hero_line2" value="${esc(c.hero_line2||'')}" />
-        </div>
-        <div class="field">
-          <label>Subtitle text</label>
-          <textarea id="f-hero_subtitle" rows="3">${esc(c.hero_subtitle||'')}</textarea>
-        </div>
-        <div class="field">
-          <label>Background image</label>
-          ${heroImgPrev}
-          <div class="upload-area" onclick="g('u-hero-bg').click()">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Upload new background
-            <input type="file" id="u-hero-bg" accept="image/*" style="display:none" onchange="previewUpload(this,'u-hero-bg-prev')" />
-          </div>
-          <img id="u-hero-bg-prev" class="upload-preview" />
-        </div>
-        <div class="save-row">
-          <button class="btn-save" onclick="saveHero()">Save Hero</button>
-          <span class="save-msg" id="msg-hero"></span>
-        </div>
-      </div>
-    </div>
+  /* Sticky save bar */
+  h += '<div class="page-save-bar">';
+  h += '<button class="back-btn" onclick="navTo(\'pages-list\', document.querySelector(\'.sidebar-nav a\'))">← Pages</button>';
+  h += '<span class="page-title">Homepage</span>';
+  h += '<div class="save-side"><span class="save-msg" id="msg-save-all"></span>';
+  h += '<button class="btn-save-main" id="btn-save-all" onclick="saveAllHomepage()">Save</button></div></div>';
 
-    <!-- ABOUT TEASER -->
-    <div class="section-card">
-      <div class="section-card-header" onclick="toggleSection(this)">About Teaser</div>
-      <div class="section-card-body">
-        <div class="field">
-          <label>Pill label</label>
-          <input id="f-about_teaser_pill" value="${esc(c.about_teaser_pill||'')}" />
-        </div>
-        <div class="field">
-          <label>Paragraph</label>
-          <textarea id="f-about_teaser" rows="3">${esc(c.about_teaser||'')}</textarea>
-          <p class="hint">Wrap text in [[double brackets]] to highlight it in yellow</p>
-        </div>
-        <div class="save-row">
-          <button class="btn-save" onclick="saveSection(['about_teaser_pill','about_teaser'],'msg-teaser')">Save</button>
-          <span class="save-msg" id="msg-teaser"></span>
-        </div>
-      </div>
-    </div>
+  /* Hero */
+  h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">Hero</div><div class="section-card-body">';
+  h += '<div class="field-row"><div class="field"><label>Line 1</label><input id="f-hero_line1" value="' + esc(c.hero_line1||'') + '" /></div>';
+  h += '<div class="field" style="max-width:130px"><label>Italic word</label><input id="f-hero_italic" value="' + esc(c.hero_italic||'') + '" /></div></div>';
+  h += '<div class="field"><label>Line 2</label><input id="f-hero_line2" value="' + esc(c.hero_line2||'') + '" /></div>';
+  h += '<div class="field"><label>Subtitle text</label><textarea id="f-hero_subtitle" rows="3">' + esc(c.hero_subtitle||'') + '</textarea></div>';
+  h += '<div class="field"><label>Background image</label>' + heroImgPrev;
+  h += '<div class="upload-area" onclick="g(\'u-hero-bg\').click()">';
+  h += '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
+  h += 'Upload new background<input type="file" id="u-hero-bg" accept="image/*" style="display:none" onchange="previewUpload(this,\'u-hero-bg-prev\')" /></div>';
+  h += '<img id="u-hero-bg-prev" class="upload-preview" /></div></div></div>';
 
-    <!-- CASE STUDIES -->
-    <div class="section-card">
-      <div class="section-card-header" onclick="toggleSection(this)">Case Studies</div>
-      <div class="section-card-body">
-        <div class="field">
-          <label>Pill label</label>
-          <input id="f-projects_pill" value="${esc(c.projects_pill||'')}" />
-        </div>
-        <div class="field">
-          <label>Section heading</label>
-          <input id="f-projects_title" value="${esc(c.projects_title||'')}" />
-        </div>
-        <div class="field">
-          <label>Section subtitle</label>
-          <textarea id="f-projects_sub" rows="2">${esc(c.projects_sub||'')}</textarea>
-        </div>
-        <div class="save-row">
-          <button class="btn-save" onclick="saveSection(['projects_pill','projects_title','projects_sub'],'msg-cs')">Save texts</button>
-          <span class="save-msg" id="msg-cs"></span>
-        </div>
-        <div class="projects-preview-bar">
-          <span>Projects (${S.projects.length})</span>
-          <button class="btn-link" onclick="nav('projects', document.querySelector('[onclick*=projects]'))">Manage Projects →</button>
-        </div>
-        ${projectsPreview}
-      </div>
-    </div>
+  /* About Teaser */
+  h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">About Teaser</div><div class="section-card-body">';
+  h += '<div class="field"><label>Pill label</label><input id="f-about_teaser_pill" value="' + esc(c.about_teaser_pill||'') + '" /></div>';
+  h += '<div class="field"><label>Paragraph</label><textarea id="f-about_teaser" rows="3">' + esc(c.about_teaser||'') + '</textarea>';
+  h += '<p class="hint">Wrap text in [[double brackets]] to highlight it</p></div></div></div>';
 
-    <!-- ABOUT FULL -->
-    <div class="section-card">
-      <div class="section-card-header" onclick="toggleSection(this)">About — Full Section</div>
-      <div class="section-card-body">
-        <div class="field">
-          <label>Pill label</label>
-          <input id="f-about_full_pill" value="${esc(c.about_full_pill||'')}" />
-        </div>
-        <div class="field">
-          <label>Section heading</label>
-          <input id="f-about_full_title" value="${esc(c.about_full_title||'')}" />
-        </div>
-        <div class="field">
-          <label>Section subtitle</label>
-          <textarea id="f-about_full_sub" rows="2">${esc(c.about_full_sub||'')}</textarea>
-        </div>
+  /* Case Studies */
+  h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">Case Studies</div><div class="section-card-body">';
+  h += '<div class="field"><label>Pill label</label><input id="f-projects_pill" value="' + esc(c.projects_pill||'') + '" /></div>';
+  h += '<div class="field"><label>Section heading</label><input id="f-projects_title" value="' + esc(c.projects_title||'') + '" /></div>';
+  h += '<div class="field"><label>Section subtitle</label><textarea id="f-projects_sub" rows="2">' + esc(c.projects_sub||'') + '</textarea></div>';
+  h += '<div class="projects-preview-bar"><span>Projects (' + S.projects.length + ')</span>';
+  h += '<button class="btn-link" onclick="navTo(\'projects\', g(\'nav-projects\'))">Manage Projects →</button></div>';
+  h += projPreview + '</div></div>';
 
-        <div class="sub-label">Profile Photo</div>
-        ${profilePrev}
-        <div class="field">
-          <div class="upload-area" onclick="g('u-profile').click()">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-            Upload profile photo
-            <input type="file" id="u-profile" accept="image/*" style="display:none" onchange="previewUpload(this,'u-profile-prev')" />
-          </div>
-          <img id="u-profile-prev" class="upload-preview" />
-        </div>
+  /* About Full */
+  h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">About — Full Section</div><div class="section-card-body">';
+  h += '<div class="field"><label>Pill label</label><input id="f-about_full_pill" value="' + esc(c.about_full_pill||'') + '" /></div>';
+  h += '<div class="field"><label>Section heading</label><input id="f-about_full_title" value="' + esc(c.about_full_title||'') + '" /></div>';
+  h += '<div class="field"><label>Section subtitle</label><textarea id="f-about_full_sub" rows="2">' + esc(c.about_full_sub||'') + '</textarea></div>';
+  h += '<div class="sub-label">Profile Photo</div>' + profilePrev;
+  h += '<div class="field"><div class="upload-area" onclick="g(\'u-profile\').click()">';
+  h += '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
+  h += 'Upload profile photo<input type="file" id="u-profile" accept="image/*" style="display:none" onchange="previewUpload(this,\'u-profile-prev\')" /></div>';
+  h += '<img id="u-profile-prev" class="upload-preview" /></div>';
+  h += '<div class="sub-label">Who I Am</div>';
+  h += '<div class="field"><label>Heading (new line = second line)</label><textarea id="f-about_who_title" rows="2">' + esc(c.about_who_title||'') + '</textarea></div>';
+  h += '<div class="field"><label>Description</label><textarea id="f-about_who_desc" rows="3">' + esc(c.about_who_desc||'') + '</textarea></div>';
+  h += '<div class="field"><label>Facts (one per line)</label><textarea id="f-about_facts" rows="4">' + esc(c.about_facts||'') + '</textarea></div>';
+  h += '<div class="sub-label">Experience</div><div id="exp-rows"></div>';
+  h += '<button class="btn-outline" style="margin-top:6px;font-size:.78rem" onclick="addExpRow()">+ Add row</button>';
+  h += '<div class="sub-label">CV File</div>' + cvLink;
+  h += '<div class="field"><div class="upload-area" onclick="g(\'u-cv\').click()">';
+  h += '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  h += 'Upload CV (PDF)<input type="file" id="u-cv" accept=".pdf" style="display:none" /></div></div>';
+  h += '<div class="sub-label">Fun Facts</div>';
+  h += '<div class="field"><label>One fact per line · Use | for a line break within a fact</label>';
+  h += '<textarea id="f-about_funfacts" rows="5">' + esc(c.about_funfacts||'') + '</textarea></div>';
+  h += '</div></div>';
 
-        <div class="sub-label">Who I Am</div>
-        <div class="field">
-          <label>Heading (use new line for second line)</label>
-          <textarea id="f-about_who_title" rows="2">${esc(c.about_who_title||'')}</textarea>
-        </div>
-        <div class="field">
-          <label>Description</label>
-          <textarea id="f-about_who_desc" rows="3">${esc(c.about_who_desc||'')}</textarea>
-        </div>
-        <div class="field">
-          <label>Facts (one per line)</label>
-          <textarea id="f-about_facts" rows="4">${esc(c.about_facts||'')}</textarea>
-        </div>
+  /* Contact */
+  h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">Contact</div><div class="section-card-body">';
+  h += '<div class="field"><label>Pill label</label><input id="f-contact_pill" value="' + esc(c.contact_pill||'') + '" /></div>';
+  h += '<div class="field"><label>Section title</label><textarea id="f-contact_title" rows="2">' + esc(c.contact_title||'') + '</textarea></div>';
+  h += '<div class="field-row"><div class="field"><label>Email</label><input id="f-contact_email" type="email" value="' + esc(c.contact_email||'') + '" /></div>';
+  h += '<div class="field"><label>Phone</label><input id="f-contact_tel" type="tel" value="' + esc(c.contact_tel||'') + '" /></div></div>';
+  h += '<div class="field"><label>LinkedIn URL</label><input id="f-contact_linkedin" type="url" value="' + esc(c.contact_linkedin||'') + '" /></div>';
+  h += '</div></div>';
 
-        <div class="sub-label">Experience</div>
-        <div id="exp-rows"></div>
-        <button class="btn-outline" style="margin-top:6px;font-size:.78rem" onclick="addExpRow()">+ Add row</button>
-
-        <div class="sub-label">CV File</div>
-        ${cvLink}
-        <div class="field">
-          <div class="upload-area" onclick="g('u-cv').click()">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            Upload CV (PDF)
-            <input type="file" id="u-cv" accept=".pdf" style="display:none" />
-          </div>
-        </div>
-
-        <div class="sub-label">Fun Facts</div>
-        <div class="field">
-          <label>One fact per line · Use | for line break within a fact</label>
-          <textarea id="f-about_funfacts" rows="5">${esc(c.about_funfacts||'')}</textarea>
-        </div>
-
-        <div class="save-row">
-          <button class="btn-save" onclick="saveAboutFull()">Save About Section</button>
-          <span class="save-msg" id="msg-about"></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- CONTACT -->
-    <div class="section-card">
-      <div class="section-card-header" onclick="toggleSection(this)">Contact</div>
-      <div class="section-card-body">
-        <div class="field">
-          <label>Pill label</label>
-          <input id="f-contact_pill" value="${esc(c.contact_pill||'')}" />
-        </div>
-        <div class="field">
-          <label>Section title</label>
-          <textarea id="f-contact_title" rows="2">${esc(c.contact_title||'')}</textarea>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label>Email</label>
-            <input id="f-contact_email" type="email" value="${esc(c.contact_email||'')}" />
-          </div>
-          <div class="field">
-            <label>Phone</label>
-            <input id="f-contact_tel" type="tel" value="${esc(c.contact_tel||'')}" />
-          </div>
-        </div>
-        <div class="field">
-          <label>LinkedIn URL</label>
-          <input id="f-contact_linkedin" type="url" value="${esc(c.contact_linkedin||'')}" />
-        </div>
-        <div class="save-row">
-          <button class="btn-save" onclick="saveSection(['contact_pill','contact_title','contact_email','contact_tel','contact_linkedin'],'msg-contact')">Save Contact</button>
-          <span class="save-msg" id="msg-contact"></span>
-        </div>
-      </div>
-    </div>
-  `;
+  return h;
 }
 
 function afterHomepage() {
-  /* populate experience rows */
   try {
     const exp = JSON.parse(S.content.about_experience || '[]');
-    exp.forEach(e => addExpRow(e.company, e.location));
+    if (exp.length) exp.forEach(e => addExpRow(e.company, e.location));
+    else { addExpRow('Elevate Studio','Rehovot, Israel'); addExpRow('Yeshivat KT','Mexico city, Mexico'); }
   } catch { addExpRow(); }
 }
 
@@ -788,52 +493,32 @@ function addExpRow(company, location) {
   const wrap = g('exp-rows'); if (!wrap) return;
   const div = document.createElement('div');
   div.className = 'exp-row';
-  div.innerHTML = `
-    <input type="text" class="exp-company" placeholder="Company" value="${esc(company||'')}">
-    <input type="text" class="exp-location" placeholder="City, Country" value="${esc(location||'')}">
-    <button class="btn-danger" onclick="this.parentElement.remove()">✕</button>
-  `;
+  div.innerHTML = '<input type="text" class="exp-company" placeholder="Company" value="' + esc(company||'') + '">' +
+    '<input type="text" class="exp-location" placeholder="City, Country" value="' + esc(location||'') + '">' +
+    '<button class="btn-danger" onclick="this.parentElement.remove()">✕</button>';
   wrap.appendChild(div);
 }
 
-/* ── HOMEPAGE SAVE FUNCTIONS ── */
-async function saveSection(keys, msgId) {
+/* ── SAVE ALL HOMEPAGE ── */
+async function saveAllHomepage() {
+  const btn = g('btn-save-all');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving…'; }
+
+  const textKeys = [
+    'hero_line1','hero_italic','hero_line2','hero_subtitle',
+    'about_teaser_pill','about_teaser',
+    'projects_pill','projects_title','projects_sub',
+    'about_full_pill','about_full_title','about_full_sub',
+    'about_who_title','about_who_desc','about_facts','about_funfacts',
+    'contact_pill','contact_title','contact_email','contact_tel','contact_linkedin'
+  ];
   const obj = {};
-  keys.forEach(k => {
-    const el = g('f-'+k);
+  textKeys.forEach(k => {
+    const el = g('f-' + k);
     if (el) { obj[k] = el.value; S.content[k] = el.value; }
   });
-  const error = await upsertMany(obj);
-  if (error) { showMsg(msgId,'✗ Error',true); toast('Save failed',true); }
-  else        { showMsg(msgId,'✓ Saved'); toast('Saved!'); }
-}
 
-async function saveHero() {
-  const keys = ['hero_line1','hero_italic','hero_line2','hero_subtitle'];
-  const obj = {};
-  keys.forEach(k => { const el=g('f-'+k); if(el){obj[k]=el.value; S.content[k]=el.value;} });
-
-  const bgFile = g('u-hero-bg')?.files[0];
-  if (bgFile) {
-    const btn = document.querySelector('#section-hero .btn-save');
-    if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner"></span>'; }
-    const {url, error} = await uploadFile(bgFile, 'hero-bg.'+bgFile.name.split('.').pop());
-    if(btn){ btn.disabled=false; btn.textContent='Save Hero'; }
-    if (error) { showMsg('msg-hero','✗ Upload failed',true); return; }
-    obj.hero_bg_image = url; S.content.hero_bg_image = url;
-  }
-
-  const error = await upsertMany(obj);
-  if (error) showMsg('msg-hero','✗ Error',true);
-  else { showMsg('msg-hero','✓ Saved'); toast('Hero saved!'); }
-}
-
-async function saveAboutFull() {
-  const keys = ['about_full_pill','about_full_title','about_full_sub','about_who_title','about_who_desc','about_facts','about_funfacts'];
-  const obj = {};
-  keys.forEach(k => { const el=g('f-'+k); if(el){obj[k]=el.value; S.content[k]=el.value;} });
-
-  /* experience */
+  /* Experience */
   const expRows = document.querySelectorAll('#exp-rows .exp-row');
   const exp = Array.from(expRows).map(r => ({
     company: r.querySelector('.exp-company').value,
@@ -842,126 +527,119 @@ async function saveAboutFull() {
   obj.about_experience = JSON.stringify(exp);
   S.content.about_experience = obj.about_experience;
 
-  const btn = document.querySelector('#msg-about').previousElementSibling;
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  /* Hero background upload */
+  const bgFile = g('u-hero-bg') && g('u-hero-bg').files[0];
+  if (bgFile) {
+    const ext = bgFile.name.split('.').pop();
+    const {url, error} = await uploadFile(bgFile, 'hero-bg.' + ext);
+    if (error) { showSaveMsg('✗ Background upload failed: ' + error.message, true); if(btn){btn.disabled=false;btn.textContent='Save';} return; }
+    obj.hero_bg_image = url; S.content.hero_bg_image = url;
+  }
 
-  /* profile photo */
-  const pFile = g('u-profile')?.files[0];
+  /* Profile photo upload */
+  const pFile = g('u-profile') && g('u-profile').files[0];
   if (pFile) {
-    const {url, error} = await uploadFile(pFile, 'about-profile.'+pFile.name.split('.').pop());
-    if (error) { showMsg('msg-about','✗ Photo upload failed',true); btn.disabled=false; btn.textContent='Save About Section'; return; }
+    const ext = pFile.name.split('.').pop();
+    const {url, error} = await uploadFile(pFile, 'about-profile.' + ext);
+    if (error) { showSaveMsg('✗ Photo upload failed: ' + error.message, true); if(btn){btn.disabled=false;btn.textContent='Save';} return; }
     obj.about_profile_image = url; S.content.about_profile_image = url;
   }
 
-  /* CV */
-  const cvFile = g('u-cv')?.files[0];
+  /* CV upload */
+  const cvFile = g('u-cv') && g('u-cv').files[0];
   if (cvFile) {
     const {url, error} = await uploadFile(cvFile, 'cv.pdf');
-    if (error) { showMsg('msg-about','✗ CV upload failed',true); btn.disabled=false; btn.textContent='Save About Section'; return; }
+    if (error) { showSaveMsg('✗ CV upload failed: ' + error.message, true); if(btn){btn.disabled=false;btn.textContent='Save';} return; }
     obj.contact_cv = url; S.content.contact_cv = url;
   }
 
-  btn.disabled = false; btn.textContent = 'Save About Section';
   const error = await upsertMany(obj);
-  if (error) { showMsg('msg-about','✗ Error',true); toast('Save failed',true); }
-  else        { showMsg('msg-about','✓ Saved'); toast('About section saved!'); }
+  if (btn) { btn.disabled = false; btn.textContent = 'Save'; }
+
+  if (error) {
+    showSaveMsg('✗ ' + (error.message || 'Save failed'), true);
+    toast('Save failed: ' + (error.message || 'unknown error'), true);
+  } else {
+    showSaveMsg('✓ All changes saved');
+    toast('Saved!');
+  }
 }
 
-/* ────────────────────────────────────────
-   PROJECTS
-──────────────────────────────────────── */
+/* ── PROJECTS ── */
 function tplProjects() {
-  const list = S.projects.length
-    ? S.projects.map(p => `
-        <div class="project-list-row">
-          ${p.image_url
-            ? `<img class="project-list-img" src="${esc(p.image_url)}" alt="${esc(p.name)}" />`
-            : `<div class="project-list-ph" style="background:${esc(p.bg_color||'#eee')}"></div>`}
-          <div class="project-list-info">
-            <strong>${esc(p.name)}</strong>
-            <span>${(p.tags||[]).join(', ')||'No labels'}</span>
-          </div>
-          <div class="project-list-actions">
-            <button class="btn-outline" style="font-size:.75rem;padding:5px 10px" onclick="openProjectForm('${esc(p.id)}')">Edit</button>
-            <button class="btn-danger"  style="font-size:.75rem;padding:5px 10px" onclick="deleteProject('${esc(p.id)}')">Delete</button>
-          </div>
-        </div>`).join('')
-    : '<p style="color:#999;font-size:.85rem;margin:8px 0 16px">No projects yet.</p>';
+  var h = '<div class="view-header"><h1>Projects</h1><button class="btn-save" onclick="openProjectForm(null)">+ New project</button></div>';
 
-  return `
-    <div class="view-header">
-      <h1>Projects</h1>
-      <button class="btn-save" onclick="openProjectForm(null)">+ New project</button>
-    </div>
-    <div id="project-list">${list}</div>
-    <div id="project-form-wrap" style="display:none"></div>
-  `;
+  if (S.projects.length === 0) {
+    h += '<div style="background:var(--white);border:1px solid var(--border);border-radius:4px;padding:24px;text-align:center;margin-bottom:16px">';
+    h += '<p style="color:var(--gray);margin-bottom:16px">No projects found in the database.</p>';
+    h += '<button class="btn-save" onclick="loadDefaultProjects()">Load default projects</button></div>';
+  } else {
+    h += '<div id="project-list">';
+    S.projects.forEach(function(p) {
+      h += '<div class="project-list-row">';
+      h += p.image_url
+        ? '<img class="project-list-img" src="' + esc(p.image_url) + '" alt="' + esc(p.name) + '" />'
+        : '<div class="project-list-ph" style="background:' + esc(p.bg_color||'#eee') + '"></div>';
+      h += '<div class="project-list-info"><strong>' + esc(p.name) + '</strong><span>' + (p.tags||[]).join(', ') + '</span></div>';
+      h += '<div class="project-list-actions">';
+      h += '<button class="btn-outline" style="font-size:.75rem;padding:5px 10px" onclick="openProjectForm(\'' + esc(p.id) + '\')">Edit</button>';
+      h += '<button class="btn-danger"  style="font-size:.75rem;padding:5px 10px" onclick="deleteProject(\'' + esc(p.id) + '\')">Delete</button>';
+      h += '</div></div>';
+    });
+    h += '</div>';
+  }
+
+  h += '<div id="project-form-wrap"></div>';
+  return h;
+}
+
+async function loadDefaultProjects() {
+  await seedProjects();
+  renderView();
 }
 
 function openProjectForm(id) {
   const p = id ? S.projects.find(x => x.id === id) : null;
-  S.editingProjectId = id || null;
-  const tags = JSON.stringify(p?.tags || []);
-  const tagChips = (p?.tags||[]).map((t,i)=>`<span class="tag-chip">${esc(t)}<button onclick="removeTag(${i})">×</button></span>`).join('');
+  const tags = JSON.stringify(p ? (p.tags||[]) : []);
+  const tagChips = (p ? (p.tags||[]) : []).map(function(t,i) {
+    return '<span class="tag-chip">' + esc(t) + '<button onclick="removeTag(' + i + ')">×</button></span>';
+  }).join('');
 
-  g('project-form-wrap').style.display = 'block';
-  g('project-form-wrap').innerHTML = `
-    <div class="project-form-card">
-      <h3>${p ? 'Edit: '+esc(p.name) : 'New Project'}</h3>
-      <input type="hidden" id="pf-tags-data" value="${esc(tags)}" />
-      <div class="field">
-        <label>Project name *</label>
-        <input id="pf-name" value="${esc(p?.name||'')}" placeholder="e.g. HandyMe" />
-      </div>
-      <div class="field">
-        <label>Preview image</label>
-        ${p?.image_url ? `<img src="${esc(p.image_url)}" class="current-img" style="width:80px;height:60px" />` : ''}
-        <div class="upload-area" onclick="g('pf-img-file').click()">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          ${p?.image_url ? 'Replace image' : 'Upload image'}
-          <input type="file" id="pf-img-file" accept="image/*" style="display:none" onchange="previewUpload(this,'pf-img-prev')" />
-        </div>
-        <img id="pf-img-prev" class="upload-preview" />
-      </div>
-      <div class="field">
-        <label>Labels</label>
-        <div class="tag-add-row">
-          <input id="pf-tag-input" placeholder="Add label…" onkeydown="if(event.key==='Enter'){event.preventDefault();addTag()}" />
-          <button class="btn-outline" onclick="addTag()">Add</button>
-        </div>
-        <div class="tags-wrap" id="pf-tags-wrap">${tagChips}</div>
-      </div>
-      <div class="field">
-        <label>Card background colour</label>
-        <div class="color-row">
-          <input type="color" class="color-swatch" id="pf-color" value="${esc(p?.bg_color||'#EEEEEE')}" oninput="g('pf-color-hex').value=this.value" />
-          <input type="text"  id="pf-color-hex" value="${esc(p?.bg_color||'#EEEEEE')}" style="width:90px" oninput="g('pf-color').value=this.value" />
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Case study link</label>
-          <input id="pf-link" type="url" value="${esc(p?.link||'')}" placeholder="https://..." />
-        </div>
-        <div class="field" style="max-width:110px">
-          <label>Display order</label>
-          <input id="pf-order" type="number" value="${p?.display_order||0}" min="0" />
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;margin-top:4px;padding-top:14px;border-top:1px solid var(--border)">
-        <button class="btn-save" onclick="saveProject()">Save project</button>
-        <button class="btn-outline" onclick="closeProjectForm()">Cancel</button>
-        <span class="save-msg" id="msg-pf"></span>
-      </div>
-    </div>
-  `;
-  g('project-form-wrap').scrollIntoView({behavior:'smooth',block:'start'});
+  const wrap = g('project-form-wrap');
+  if (!wrap) return;
+  wrap.innerHTML =
+    '<div class="project-form-card">' +
+    '<h3>' + (p ? 'Edit: ' + esc(p.name) : 'New Project') + '</h3>' +
+    '<input type="hidden" id="pf-id" value="' + esc(id||'') + '" />' +
+    '<input type="hidden" id="pf-tags-data" value="' + esc(tags) + '" />' +
+    '<div class="field"><label>Project name *</label><input id="pf-name" value="' + esc(p?p.name:'') + '" placeholder="e.g. HandyMe" /></div>' +
+    '<div class="field"><label>Preview image</label>' +
+    (p&&p.image_url ? '<img src="' + esc(p.image_url) + '" class="current-img" style="width:80px;height:60px" />' : '') +
+    '<div class="upload-area" onclick="g(\'pf-img-file\').click()">' +
+    '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
+    (p&&p.image_url ? 'Replace image' : 'Upload image') +
+    '<input type="file" id="pf-img-file" accept="image/*" style="display:none" onchange="previewUpload(this,\'pf-img-prev\')" /></div>' +
+    '<img id="pf-img-prev" class="upload-preview" /></div>' +
+    '<div class="field"><label>Labels</label>' +
+    '<div class="tag-add-row"><input id="pf-tag-input" placeholder="Add label…" onkeydown="if(event.key===\'Enter\'){event.preventDefault();addTag()}" />' +
+    '<button class="btn-outline" onclick="addTag()">Add</button></div>' +
+    '<div class="tags-wrap" id="pf-tags-wrap">' + tagChips + '</div></div>' +
+    '<div class="field"><label>Card background colour</label><div class="color-row">' +
+    '<input type="color" class="color-swatch" id="pf-color" value="' + esc(p?p.bg_color:'#EEEEEE') + '" oninput="g(\'pf-color-hex\').value=this.value" />' +
+    '<input type="text" id="pf-color-hex" value="' + esc(p?p.bg_color:'#EEEEEE') + '" style="width:90px" oninput="g(\'pf-color\').value=this.value" /></div></div>' +
+    '<div class="field-row"><div class="field"><label>Case study link</label><input id="pf-link" type="url" value="' + esc(p?p.link:'') + '" placeholder="https://…" /></div>' +
+    '<div class="field" style="max-width:110px"><label>Display order</label><input id="pf-order" type="number" value="' + (p?p.display_order:S.projects.length) + '" min="0" /></div></div>' +
+    '<div style="display:flex;gap:8px;align-items:center;margin-top:12px">' +
+    '<button class="btn-save" id="pf-submit" onclick="saveProject()">Save project</button>' +
+    '<button class="btn-outline" onclick="closeProjectForm()">Cancel</button>' +
+    '<span class="save-msg" id="msg-pf"></span></div></div>';
+
+  wrap.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function closeProjectForm() {
-  g('project-form-wrap').style.display = 'none';
-  g('project-form-wrap').innerHTML = '';
-  S.editingProjectId = null;
+  const wrap = g('project-form-wrap');
+  if (wrap) wrap.innerHTML = '';
 }
 
 function addTag() {
@@ -970,120 +648,93 @@ function addTag() {
   const tags = JSON.parse(g('pf-tags-data').value);
   tags.push(v);
   g('pf-tags-data').value = JSON.stringify(tags);
-  g('pf-tags-wrap').innerHTML = tags.map((t,i) =>
-    `<span class="tag-chip">${esc(t)}<button onclick="removeTag(${i})">×</button></span>`).join('');
+  g('pf-tags-wrap').innerHTML = tags.map(function(t,i){ return '<span class="tag-chip">' + esc(t) + '<button onclick="removeTag(' + i + ')">×</button></span>'; }).join('');
   inp.value = '';
 }
-
 function removeTag(i) {
   const tags = JSON.parse(g('pf-tags-data').value);
-  tags.splice(i, 1);
+  tags.splice(i,1);
   g('pf-tags-data').value = JSON.stringify(tags);
-  g('pf-tags-wrap').innerHTML = tags.map((t,j) =>
-    `<span class="tag-chip">${esc(t)}<button onclick="removeTag(${j})">×</button></span>`).join('');
+  g('pf-tags-wrap').innerHTML = tags.map(function(t,j){ return '<span class="tag-chip">' + esc(t) + '<button onclick="removeTag(' + j + ')">×</button></span>'; }).join('');
 }
 
 async function saveProject() {
   const name = val('pf-name').trim();
-  if (!name) { showMsg('msg-pf','Name is required',true); return; }
+  if (!name) { showPfMsg('Name is required', true); return; }
+  const id = val('pf-id');
+  const btn = g('pf-submit');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>'; }
 
-  const btn = g('project-form-wrap').querySelector('.btn-save');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
-
-  let imageUrl = S.editingProjectId
-    ? (S.projects.find(p=>p.id===S.editingProjectId)?.image_url || null)
-    : null;
-
-  const imgFile = g('pf-img-file')?.files[0];
+  let imageUrl = id ? (S.projects.find(p=>p.id===id)||{}).image_url || null : null;
+  const imgFile = g('pf-img-file') && g('pf-img-file').files[0];
   if (imgFile) {
     const safeName = name.toLowerCase().replace(/[^a-z0-9]/g,'-');
-    const {url, error} = await uploadFile(imgFile, `projects/${safeName}.${imgFile.name.split('.').pop()}`);
-    if (error) { showMsg('msg-pf','✗ Upload failed',true); btn.disabled=false; btn.textContent='Save project'; return; }
+    const {url, error} = await uploadFile(imgFile, 'projects/' + safeName + '.' + imgFile.name.split('.').pop());
+    if (error) { showPfMsg('✗ Upload: ' + error.message, true); if(btn){btn.disabled=false;btn.textContent='Save project';} return; }
     imageUrl = url;
   }
 
   const payload = {
-    name,
-    image_url:     imageUrl || null,
-    bg_color:      val('pf-color-hex') || '#EEEEEE',
-    tags:          JSON.parse(g('pf-tags-data').value),
-    link:          val('pf-link') || '#',
-    display_order: parseInt(val('pf-order')) || 0,
+    name, image_url: imageUrl||null,
+    bg_color: val('pf-color-hex')||'#EEEEEE',
+    tags: JSON.parse(g('pf-tags-data').value),
+    link: val('pf-link')||'#',
+    display_order: parseInt(val('pf-order'))||0
   };
 
   let error;
-  if (S.editingProjectId) {
-    ({error} = await db.from('projects').update(payload).eq('id', S.editingProjectId));
-  } else {
-    ({error} = await db.from('projects').insert(payload));
-  }
+  if (id) { ({error} = await db.from('projects').update(payload).eq('id', id)); }
+  else     { ({error} = await db.from('projects').insert(payload)); }
+  if (btn) { btn.disabled=false; btn.textContent='Save project'; }
 
-  btn.disabled = false; btn.textContent = 'Save project';
-  if (error) { showMsg('msg-pf','✗ '+error.message,true); toast('Error saving project',true); return; }
-
+  if (error) { showPfMsg('✗ ' + error.message, true); toast('Error: ' + error.message, true); return; }
   toast('Project saved!');
   closeProjectForm();
   const {data} = await db.from('projects').select('*').order('display_order');
   S.projects = data || [];
-  g('project-list').innerHTML = tplProjects().match(/<div id="project-list">([\s\S]*?)<\/div>/)?.[1] || '';
-  renderView(); // re-render projects view
+  renderView();
+}
+
+function showPfMsg(text, isErr) {
+  const el = g('msg-pf'); if (!el) return;
+  el.textContent = text;
+  el.className = 'save-msg show ' + (isErr ? 'err' : 'ok');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 4000);
 }
 
 async function deleteProject(id) {
   if (!confirm('Delete this project?')) return;
   const {error} = await db.from('projects').delete().eq('id', id);
-  if (error) { toast('Error deleting',true); return; }
+  if (error) { toast('Error: ' + error.message, true); return; }
   toast('Project deleted');
   const {data} = await db.from('projects').select('*').order('display_order');
   S.projects = data || [];
   renderView();
 }
 
-/* ────────────────────────────────────────
-   MENUS
-──────────────────────────────────────── */
+/* ── MENUS ── */
 function tplMenus() {
-  return `
-    <div class="view-header"><h1>Menus</h1></div>
-    <div class="section-card">
-      <div class="section-card-header" onclick="toggleSection(this)">Navigation links</div>
-      <div class="section-card-body">
-        <p class="hint" style="margin-bottom:14px">These are the links in the top navigation bar.</p>
-        <div id="nav-rows"></div>
-        <button class="btn-outline" style="margin-top:6px;font-size:.78rem" onclick="addNavRow()">+ Add link</button>
-        <div class="save-row">
-          <button class="btn-save" onclick="saveMenus()">Save menu</button>
-          <span class="save-msg" id="msg-menus"></span>
-        </div>
-      </div>
-    </div>
-    <div class="section-card">
-      <div class="section-card-header" onclick="toggleSection(this)">CTA Button</div>
-      <div class="section-card-body">
-        <p class="hint" style="margin-bottom:14px">The "Contact" button at the right of the nav bar.</p>
-        <div class="field-row">
-          <div class="field">
-            <label>Label</label>
-            <input id="f-nav_cta_label" value="${esc(S.content.nav_cta_label||'Contact')}" />
-          </div>
-          <div class="field">
-            <label>URL</label>
-            <input id="f-nav_cta_url" value="${esc(S.content.nav_cta_url||'#contact')}" />
-          </div>
-        </div>
-        <div class="save-row">
-          <button class="btn-save" onclick="saveSection(['nav_cta_label','nav_cta_url'],'msg-cta')">Save CTA</button>
-          <span class="save-msg" id="msg-cta"></span>
-        </div>
-      </div>
-    </div>
-  `;
+  return '<div class="view-header"><h1>Menus</h1></div>' +
+    '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">Navigation links</div><div class="section-card-body">' +
+    '<p class="hint" style="margin-bottom:14px">Links in the top navigation bar.</p>' +
+    '<div id="nav-rows"></div>' +
+    '<button class="btn-outline" style="margin-top:6px;font-size:.78rem" onclick="addNavRow()">+ Add link</button>' +
+    '<div style="display:flex;align-items:center;gap:10px;margin-top:16px">' +
+    '<button class="btn-save" onclick="saveNavLinks()">Save links</button>' +
+    '<span class="save-msg" id="msg-nav"></span></div></div></div>' +
+    '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">CTA Button</div><div class="section-card-body">' +
+    '<div class="field-row"><div class="field"><label>Label</label><input id="f-nav_cta_label" value="' + esc(S.content.nav_cta_label||'Contact') + '" /></div>' +
+    '<div class="field"><label>URL</label><input id="f-nav_cta_url" value="' + esc(S.content.nav_cta_url||'#contact') + '" /></div></div>' +
+    '<div style="display:flex;align-items:center;gap:10px;margin-top:12px">' +
+    '<button class="btn-save" onclick="saveCtaBtn()">Save CTA</button>' +
+    '<span class="save-msg" id="msg-cta"></span></div></div></div>';
 }
 
 function afterMenus() {
   try {
     const links = JSON.parse(S.content.nav_links || '[]');
-    if (links.length) { links.forEach(l => addNavRow(l.label, l.url)); }
+    if (links.length) links.forEach(l => addNavRow(l.label, l.url));
     else { addNavRow('About','#about'); addNavRow('Projects','#projects'); addNavRow('Resume','#resume'); }
   } catch { addNavRow(); }
 }
@@ -1092,25 +743,34 @@ function addNavRow(label, url) {
   const wrap = g('nav-rows'); if (!wrap) return;
   const div = document.createElement('div');
   div.className = 'menu-row';
-  div.innerHTML = `
-    <span class="drag-handle">⠿</span>
-    <input type="text" class="nav-label" placeholder="Label" value="${esc(label||'')}">
-    <input type="text" class="nav-url"   placeholder="URL or #anchor" value="${esc(url||'')}">
-    <button class="btn-danger" onclick="this.parentElement.remove()">✕</button>
-  `;
+  div.innerHTML = '<span class="drag-handle">⠿</span>' +
+    '<input type="text" class="nav-label" placeholder="Label" value="' + esc(label||'') + '">' +
+    '<input type="text" class="nav-url" placeholder="#anchor or https://…" value="' + esc(url||'') + '">' +
+    '<button class="btn-danger" onclick="this.parentElement.remove()">✕</button>';
   wrap.appendChild(div);
 }
 
-async function saveMenus() {
+async function saveNavLinks() {
   const rows = document.querySelectorAll('#nav-rows .menu-row');
-  const links = Array.from(rows).map(r => ({
-    label: r.querySelector('.nav-label').value,
-    url:   r.querySelector('.nav-url').value
-  })).filter(l => l.label);
-  const error = await upsert('nav_links', JSON.stringify(links));
-  S.content.nav_links = JSON.stringify(links);
-  if (error) { showMsg('msg-menus','✗ Error',true); toast('Save failed',true); }
-  else        { showMsg('msg-menus','✓ Saved'); toast('Menu saved!'); }
+  const links = Array.from(rows).map(r => ({label:r.querySelector('.nav-label').value, url:r.querySelector('.nav-url').value})).filter(l => l.label);
+  const val = JSON.stringify(links);
+  const {error} = await db.from('site_content').upsert({key:'nav_links', value:val, updated_at:new Date().toISOString()},{onConflict:'key'});
+  if (error) { showMenuMsg('msg-nav','✗ '+error.message,true); } else { S.content.nav_links=val; showMenuMsg('msg-nav','✓ Saved'); toast('Menu saved!'); }
+}
+
+async function saveCtaBtn() {
+  const label = val('f-nav_cta_label'), url = val('f-nav_cta_url');
+  const rows = [{key:'nav_cta_label',value:label,updated_at:new Date().toISOString()},{key:'nav_cta_url',value:url,updated_at:new Date().toISOString()}];
+  const {error} = await db.from('site_content').upsert(rows,{onConflict:'key'});
+  if (error) { showMenuMsg('msg-cta','✗ '+error.message,true); } else { S.content.nav_cta_label=label; S.content.nav_cta_url=url; showMenuMsg('msg-cta','✓ Saved'); toast('CTA saved!'); }
+}
+
+function showMenuMsg(id, text, isErr) {
+  const el = g(id); if (!el) return;
+  el.textContent = text;
+  el.className = 'save-msg show ' + (isErr ? 'err' : 'ok');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 4000);
 }
 </script>
 </body>
