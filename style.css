@@ -1149,9 +1149,12 @@ body {
     padding: 16px 18px;
   }
 
-  /* ── About: reduce gap, tighter line-height ── */
-  .about {
-    padding-top: 28px;
+  /* ── Uniform section spacing on mobile ── */
+  .about,
+  .projects,
+  .about-full,
+  .contact {
+    padding-top: 60px;
     padding-bottom: 60px;
   }
 
