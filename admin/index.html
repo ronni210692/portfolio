@@ -252,6 +252,8 @@ const DEFAULTS = {
   contact_linkedin:'https://www.linkedin.com/in/ronni-cohen-ux',
   nav_links:JSON.stringify([{label:'About',url:'#about'},{label:'Projects',url:'#projects'},{label:'Resume',url:'#resume'}]),
   nav_cta_label:'Contact', nav_cta_url:'#contact',
+  anchor_about:'about', anchor_projects:'projects',
+  anchor_about_full:'about-full', anchor_contact:'contact',
 };
 const DEFAULT_PROJECTS = [
   {name:'HandyMe',    bg_color:'#F5A02A', tags:['UX','UI','Mobile','App'], link:'#', display_order:0},
@@ -454,12 +456,14 @@ function tplHomepage() {
 
   /* About Teaser */
   h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">About Teaser</div><div class="section-card-body">';
+  h += anchorField('anchor_about', c.anchor_about||'about');
   h += '<div class="field"><label>Pill label</label><input id="f-about_teaser_pill" value="' + esc(c.about_teaser_pill||'') + '" /></div>';
   h += '<div class="field"><label>Paragraph</label><textarea id="f-about_teaser" rows="3">' + esc(c.about_teaser||'') + '</textarea>';
   h += '<p class="hint">Wrap text in [[double brackets]] to highlight it</p></div></div></div>';
 
   /* Case Studies */
   h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">Case Studies</div><div class="section-card-body">';
+  h += anchorField('anchor_projects', c.anchor_projects||'projects');
   h += '<div class="field"><label>Pill label</label><input id="f-projects_pill" value="' + esc(c.projects_pill||'') + '" /></div>';
   h += '<div class="field"><label>Section heading</label><input id="f-projects_title" value="' + esc(c.projects_title||'') + '" /></div>';
   h += '<div class="field"><label>Section subtitle</label><textarea id="f-projects_sub" rows="2">' + esc(c.projects_sub||'') + '</textarea></div>';
@@ -469,6 +473,7 @@ function tplHomepage() {
 
   /* About Full */
   h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">About — Full Section</div><div class="section-card-body">';
+  h += anchorField('anchor_about_full', c.anchor_about_full||'about-full');
   h += '<div class="field"><label>Pill label</label><input id="f-about_full_pill" value="' + esc(c.about_full_pill||'') + '" /></div>';
   h += '<div class="field"><label>Section heading</label><input id="f-about_full_title" value="' + esc(c.about_full_title||'') + '" /></div>';
   h += '<div class="field"><label>Section subtitle</label><textarea id="f-about_full_sub" rows="2">' + esc(c.about_full_sub||'') + '</textarea></div>';
@@ -494,6 +499,7 @@ function tplHomepage() {
 
   /* Contact */
   h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">Contact</div><div class="section-card-body">';
+  h += anchorField('anchor_contact', c.anchor_contact||'contact');
   h += '<div class="field"><label>Pill label</label><input id="f-contact_pill" value="' + esc(c.contact_pill||'') + '" /></div>';
   h += '<div class="field"><label>Section title</label><textarea id="f-contact_title" rows="2">' + esc(c.contact_title||'') + '</textarea></div>';
   h += '<div class="field-row"><div class="field"><label>Email</label><input id="f-contact_email" type="email" value="' + esc(c.contact_email||'') + '" /></div>';
@@ -502,6 +508,14 @@ function tplHomepage() {
   h += '</div></div>';
 
   return h;
+}
+
+function anchorField(key, defaultVal) {
+  return '<div class="field" style="background:#f6f7f7;border-radius:4px;padding:8px 10px;margin-bottom:14px;display:flex;align-items:center;gap:8px">' +
+    '<span style="font-size:.72rem;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap">Section anchor</span>' +
+    '<span style="color:#bbb;font-size:.9rem">#</span>' +
+    '<input id="f-' + key + '" value="' + esc(defaultVal) + '" style="border:1px solid #dcdcde;border-radius:4px;padding:4px 8px;font-size:.82rem;font-family:monospace;width:160px;outline:none" />' +
+    '<span style="font-size:.72rem;color:#999">Used in nav links (e.g. href=&quot;#' + esc(defaultVal) + '&quot;)</span></div>';
 }
 
 function afterHomepage() {
@@ -533,7 +547,8 @@ async function saveAllHomepage() {
     'projects_pill','projects_title','projects_sub',
     'about_full_pill','about_full_title','about_full_sub',
     'about_who_title','about_who_desc','about_facts','about_funfacts',
-    'contact_pill','contact_title','contact_email','contact_tel','contact_linkedin'
+    'contact_pill','contact_title','contact_email','contact_tel','contact_linkedin',
+    'anchor_about','anchor_projects','anchor_about_full','anchor_contact'
   ];
   const obj = {};
   textKeys.forEach(k => {

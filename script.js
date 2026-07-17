@@ -155,6 +155,20 @@
       if (el) el.textContent = c.contact_pill;
     }
 
+    /* Section anchors */
+    const anchorMap = {
+      anchor_about:       'section.about',
+      anchor_projects:    'section.projects',
+      anchor_about_full:  'section.about-full',
+      anchor_contact:     'section.contact',
+    };
+    Object.entries(anchorMap).forEach(([key, selector]) => {
+      if (c[key]) {
+        const el = document.querySelector(selector);
+        if (el) el.id = c[key];
+      }
+    });
+
     /* Nav links */
     if (c.nav_links) {
       try {
