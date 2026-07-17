@@ -213,6 +213,7 @@
         <a href="../index.html" target="_blank">← View site</a>
       </div>
     </aside>
+    <div id="db-error-banner" style="display:none;position:fixed;top:0;left:var(--sidebar-w);right:0;z-index:200;background:#d63638;color:#fff;padding:10px 24px;font-size:.85rem;font-weight:500;"></div>
     <main class="main" id="main"></main>
   </div>
 </div>
@@ -290,33 +291,55 @@ function navTo(view, el) {
 
 /* ── INIT ── */
 async function initAdmin() {
+  // Always pre-fill with defaults so fields are never empty
+  Object.assign(S.content, DEFAULTS);
+
+  // Show loading state
+  document.getElementById('main').innerHTML = '<p style="padding:40px 0;color:#999;font-size:.875rem">Loading…</p>';
+
   const [{data:rows, error:ce}, {data:projects, error:pe}] = await Promise.all([
     db.from('site_content').select('*'),
     db.from('projects').select('*').order('display_order')
   ]);
 
-  if (ce) { toast('DB error: ' + ce.message, true); console.error(ce); }
-  if (pe) { toast('Projects error: ' + pe.message, true); console.error(pe); }
-
-  if (rows && rows.length > 0) {
-    rows.forEach(r => { S.content[r.key] = r.value; });
-  } else if (!ce) {
-    await seedContent();
+  if (ce) {
+    showDBError('Cannot connect to database: ' + ce.message);
+    console.error('Content error:', ce);
+  } else {
+    // Overlay DB values on top of defaults
+    if (rows && rows.length > 0) {
+      rows.forEach(r => { S.content[r.key] = r.value; });
+    }
+    // Seed only the keys that are missing in DB
+    await seedMissingContent(rows || []);
   }
 
-  S.projects = projects || [];
-  if (S.projects.length === 0 && !pe) {
-    await seedProjects();
+  if (pe) {
+    console.error('Projects error:', pe);
+  } else {
+    S.projects = projects || [];
+    if (S.projects.length === 0) {
+      await seedProjects();
+    }
   }
 
   renderView();
 }
 
-async function seedContent() {
-  const rows = Object.entries(DEFAULTS).map(([key,value]) => ({key, value, updated_at: new Date().toISOString()}));
-  const {error} = await db.from('site_content').upsert(rows, {onConflict:'key'});
-  if (error) { toast('Seed error: ' + error.message, true); console.error(error); return; }
-  Object.assign(S.content, DEFAULTS);
+function showDBError(msg) {
+  const banner = document.getElementById('db-error-banner');
+  if (banner) { banner.textContent = '⚠ ' + msg; banner.style.display = 'block'; }
+}
+
+async function seedMissingContent(existingRows) {
+  const existingKeys = new Set(existingRows.map(r => r.key));
+  const missing = Object.entries(DEFAULTS)
+    .filter(function(pair) { return !existingKeys.has(pair[0]); })
+    .map(function(pair) { return {key: pair[0], value: pair[1], updated_at: new Date().toISOString()}; });
+  if (missing.length === 0) return;
+  const {error} = await db.from('site_content').upsert(missing, {onConflict:'key'});
+  if (error) { console.error('Seed missing error:', error); showDBError('Could not seed defaults: ' + error.message); }
+  else { missing.forEach(r => { S.content[r.key] = r.value; }); }
 }
 
 async function seedProjects() {
