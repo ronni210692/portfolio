@@ -689,8 +689,13 @@ function initDragSort() {
       if (p) p.display_order = u.display_order;
     });
 
-    const { error } = await db.from('projects').upsert(updates, { onConflict: 'id' });
-    if (error) showToast('⚠ Order save failed: ' + error.message, true);
+    const results = await Promise.all(
+      updates.map(function(u) {
+        return db.from('projects').update({ display_order: u.display_order }).eq('id', u.id);
+      })
+    );
+    const failed = results.find(function(r) { return r.error; });
+    if (failed) showToast('⚠ Order save failed: ' + failed.error.message, true);
     else showToast('Order saved');
   });
 }
