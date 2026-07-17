@@ -160,7 +160,11 @@
     /* EXPERIENCE / MENU ROWS */
     .exp-row, .menu-row { display:flex; gap:8px; margin-bottom:8px; align-items:center; }
     .exp-row input, .menu-row input { flex:1; }
-    .drag-handle { cursor:grab; color:#ccc; padding:0 4px; }
+    .drag-handle { cursor:grab; color:#bbb; padding:0 6px; font-size:1.1rem; line-height:1; flex-shrink:0; }
+    .drag-handle:active { cursor:grabbing; }
+    .project-list-row[draggable] { transition:opacity .15s; }
+    .project-list-row.drag-over { border-color:var(--accent); box-shadow:0 0 0 2px rgba(34,113,177,.25); }
+    .project-list-row.dragging { opacity:.4; }
 
     /* FIELD HINT */
     .field-hint { display:block; margin-top:4px; font-size:.75rem; color:var(--gray); }
@@ -361,7 +365,7 @@ function renderView() {
   main.innerHTML = '';
   if      (S.view === 'pages-list')    main.innerHTML = tplPagesList();
   else if (S.view === 'page-homepage') { main.innerHTML = tplHomepage(); afterHomepage(); }
-  else if (S.view === 'projects')      main.innerHTML = tplProjects();
+  else if (S.view === 'projects')      { main.innerHTML = tplProjects(); initDragSort(); }
   else if (S.view === 'menus')         { main.innerHTML = tplMenus(); afterMenus(); }
 }
 
@@ -618,7 +622,8 @@ function tplProjects() {
   } else {
     h += '<div id="project-list">';
     S.projects.forEach(function(p) {
-      h += '<div class="project-list-row">';
+      h += '<div class="project-list-row" draggable="true" data-id="' + esc(p.id) + '">';
+      h += '<span class="drag-handle" title="Drag to reorder">⠿</span>';
       h += p.image_url
         ? '<img class="project-list-img" src="' + esc(p.image_url) + '" alt="' + esc(p.name) + '" />'
         : '<div class="project-list-ph" style="background:' + esc(p.bg_color||'#eee') + '"></div>';
@@ -633,6 +638,61 @@ function tplProjects() {
 
   h += '<div id="project-form-wrap"></div>';
   return h;
+}
+
+function initDragSort() {
+  const list = document.getElementById('project-list');
+  if (!list) return;
+  let dragged = null;
+
+  list.addEventListener('dragstart', function(e) {
+    dragged = e.target.closest('.project-list-row');
+    if (!dragged) return;
+    dragged.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  list.addEventListener('dragend', function() {
+    if (dragged) dragged.classList.remove('dragging');
+    list.querySelectorAll('.project-list-row').forEach(function(r) { r.classList.remove('drag-over'); });
+    dragged = null;
+  });
+
+  list.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const target = e.target.closest('.project-list-row');
+    if (!target || target === dragged) return;
+    list.querySelectorAll('.project-list-row').forEach(function(r) { r.classList.remove('drag-over'); });
+    target.classList.add('drag-over');
+  });
+
+  list.addEventListener('drop', async function(e) {
+    e.preventDefault();
+    const target = e.target.closest('.project-list-row');
+    if (!target || target === dragged || !dragged) return;
+    target.classList.remove('drag-over');
+
+    // Reorder DOM
+    const rows = Array.from(list.querySelectorAll('.project-list-row'));
+    const fromIdx = rows.indexOf(dragged);
+    const toIdx   = rows.indexOf(target);
+    if (fromIdx < toIdx) target.after(dragged);
+    else target.before(dragged);
+
+    // Persist new order
+    const newOrder = Array.from(list.querySelectorAll('.project-list-row')).map(function(r) { return r.dataset.id; });
+    const updates  = newOrder.map(function(id, i) { return { id: id, display_order: i }; });
+    S.projects.sort(function(a, b) { return newOrder.indexOf(a.id) - newOrder.indexOf(b.id); });
+    updates.forEach(function(u) {
+      const p = S.projects.find(function(x) { return x.id === u.id; });
+      if (p) p.display_order = u.display_order;
+    });
+
+    const { error } = await db.from('projects').upsert(updates, { onConflict: 'id' });
+    if (error) showToast('⚠ Order save failed: ' + error.message, true);
+    else showToast('Order saved');
+  });
 }
 
 async function loadDefaultProjects() {
@@ -669,8 +729,8 @@ function openProjectForm(id) {
     '<div class="field"><label>Card background colour</label><div class="color-row">' +
     '<input type="color" class="color-swatch" id="pf-color" value="' + esc(p?p.bg_color:'#EEEEEE') + '" oninput="g(\'pf-color-hex\').value=this.value" />' +
     '<input type="text" id="pf-color-hex" value="' + esc(p?p.bg_color:'#EEEEEE') + '" style="width:90px" oninput="g(\'pf-color\').value=this.value" /></div></div>' +
-    '<div class="field-row"><div class="field"><label>Case study link</label><input id="pf-link" type="url" value="' + esc(p?p.link:'') + '" placeholder="https://…" /></div>' +
-    '<div class="field" style="max-width:110px"><label>Display order</label><input id="pf-order" type="number" value="' + (p?p.display_order:S.projects.length) + '" min="0" /></div></div>' +
+    '<div class="field"><label>Case study link</label><input id="pf-link" type="url" value="' + esc(p?p.link:'') + '" placeholder="https://…" /></div>' +
+    '<input type="hidden" id="pf-order" value="' + (p?p.display_order:S.projects.length) + '" />' +
     '<div style="display:flex;gap:8px;align-items:center;margin-top:12px">' +
     '<button class="btn-save" id="pf-submit" onclick="saveProject()">Save project</button>' +
     '<button class="btn-outline" onclick="closeProjectForm()">Cancel</button>' +
