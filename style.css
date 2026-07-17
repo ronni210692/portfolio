@@ -933,6 +933,14 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* Word-by-word unblur reveal */
+.word-reveal {
+  display: inline-block;
+  opacity: 0.15;
+  filter: blur(7px);
+  will-change: opacity, filter;
+}
+
 /* Highlighted words — same weight, just darker */
 .about-text .highlight {
   font-weight: 400;
