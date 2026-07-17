@@ -1178,4 +1178,12 @@ body {
   .about-card {
     padding: 24px 20px;
   }
+
+  .contact-inner {
+    padding-bottom: 32px;
+  }
+
+  .site-footer {
+    padding-bottom: 24px;
+  }
 }
