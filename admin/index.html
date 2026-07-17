@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #1a1a1a;
+      --gray: #555555;
+      --light-gray: #f0f0f0;
+      --border: #e0e0e0;
+      --white: #ffffff;
+      --accent: #1a1a1a;
+      --accent-hover: #333;
+      --danger: #e53e3e;
+      --success: #38a169;
+      --sidebar-w: 220px;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f7f6f7;
+      color: var(--black);
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f7f6f7;
+    }
+    .login-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 360px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      text-align: center;
+    }
+    .login-card h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+    .login-card p  { color: var(--gray); font-size: 0.875rem; margin-bottom: 32px; }
+    .login-card input {
+      width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none;
+      transition: border-color .2s;
+    }
+    .login-card input:focus { border-color: var(--black); }
+    .login-card button {
+      width: 100%; margin-top: 16px; padding: 13px;
+      background: var(--black); color: var(--white);
+      border: none; border-radius: 10px; font-family: inherit;
+      font-size: 1rem; font-weight: 600; cursor: pointer; transition: background .2s;
+    }
+    .login-card button:hover { background: var(--accent-hover); }
+    #login-error { color: var(--danger); font-size: 0.8rem; margin-top: 10px; display: none; }
+
+    /* ── ADMIN SHELL ── */
+    #admin-shell { display: none; }
+    .admin-layout { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      padding: 24px 20px 20px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo span { color: var(--gray); font-weight: 400; font-size: 0.75rem; display: block; }
+    .sidebar-nav { flex: 1; padding: 16px 0; }
+    .sidebar-nav a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 20px; color: var(--gray); text-decoration: none;
+      font-size: 0.9rem; font-weight: 500; border-radius: 0;
+      transition: color .15s, background .15s;
+    }
+    .sidebar-nav a:hover { color: var(--black); background: var(--light-gray); }
+    .sidebar-nav a.active { color: var(--black); background: var(--light-gray); font-weight: 600; }
+    .sidebar-nav a svg { flex-shrink: 0; }
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .sidebar-footer a {
+      font-size: 0.8rem; color: var(--gray); text-decoration: none;
+    }
+    .sidebar-footer a:hover { color: var(--black); }
+
+    /* Main content */
+    .admin-main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 900px;
+    }
+
+    /* Tab panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Section header */
+    .section-header { margin-bottom: 32px; }
+    .section-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+    .section-header p  { color: var(--gray); font-size: 0.875rem; }
+
+    /* Form card */
+    .form-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .form-card h3 {
+      font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block; font-size: 0.8rem; font-weight: 600;
+      color: var(--gray); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%; padding: 10px 14px;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: 0.9rem; outline: none;
+      transition: border-color .2s; background: #fafafa;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: var(--black); background: var(--white);
+    }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field .hint { font-size: 0.75rem; color: #999; margin-top: 4px; }
+
+    /* Image upload */
+    .upload-area {
+      border: 2px dashed var(--border); border-radius: 8px;
+      padding: 20px; text-align: center; cursor: pointer;
+      transition: border-color .2s; background: #fafafa;
+    }
+    .upload-area:hover { border-color: var(--black); }
+    .upload-area input[type="file"] { display: none; }
+    .upload-area p { font-size: 0.85rem; color: var(--gray); margin-top: 8px; }
+    .upload-preview {
+      width: 100%; max-height: 180px; object-fit: cover;
+      border-radius: 6px; margin-top: 12px; display: none;
+    }
+
+    /* Buttons */
+    .btn-save {
+      background: var(--black); color: var(--white);
+      border: none; border-radius: 8px; padding: 11px 24px;
+      font-family: inherit; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; transition: background .2s;
+    }
+    .btn-save:hover { background: var(--accent-hover); }
+    .btn-save:disabled { background: #999; cursor: not-allowed; }
+    .btn-outline {
+      background: transparent; color: var(--black);
+      border: 1.5px solid var(--border); border-radius: 8px;
+      padding: 10px 20px; font-family: inherit; font-size: 0.875rem;
+      font-weight: 500; cursor: pointer; transition: .2s;
+    }
+    .btn-outline:hover { border-color: var(--black); }
+    .btn-danger {
+      background: transparent; color: var(--danger);
+      border: 1.5px solid var(--danger); border-radius: 8px;
+      padding: 8px 16px; font-family: inherit; font-size: 0.8rem;
+      font-weight: 500; cursor: pointer; transition: .2s;
+    }
+    .btn-danger:hover { background: var(--danger); color: var(--white); }
+
+    .save-row {
+      display: flex; align-items: center; gap: 12px; margin-top: 4px;
+    }
+    .save-msg {
+      font-size: 0.8rem; font-weight: 500;
+      opacity: 0; transition: opacity .3s;
+    }
+    .save-msg.show { opacity: 1; }
+    .save-msg.ok  { color: var(--success); }
+    .save-msg.err { color: var(--danger); }
+
+    /* Projects list */
+    .projects-list { margin-bottom: 24px; }
+    .project-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; background: var(--white);
+      border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 8px;
+    }
+    .project-row-img {
+      width: 56px; height: 40px; border-radius: 6px;
+      object-fit: cover; background: var(--light-gray);
+      flex-shrink: 0;
+    }
+    .project-row-img-ph {
+      width: 56px; height: 40px; border-radius: 6px;
+      background: var(--light-gray); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .project-row-info { flex: 1; min-width: 0; }
+    .project-row-info strong { font-size: 0.9rem; display: block; }
+    .project-row-info span { font-size: 0.78rem; color: var(--gray); }
+    .project-row-actions { display: flex; gap: 8px; }
+
+    .project-form-wrap {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin-top: 16px;
+    }
+    .project-form-wrap h3 { font-size: 1rem; font-weight: 600; margin-bottom: 20px; }
+
+    .tags-input-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .tag-chip {
+      background: var(--light-gray); border-radius: 20px;
+      padding: 4px 10px; font-size: 0.78rem; display: flex;
+      align-items: center; gap: 4px;
+    }
+    .tag-chip button {
+      background: none; border: none; cursor: pointer;
+      color: var(--gray); font-size: 0.9rem; line-height: 1;
+      padding: 0 2px;
+    }
+
+    /* Color swatch */
+    .color-row { display: flex; align-items: center; gap: 10px; }
+    .color-swatch {
+      width: 32px; height: 32px; border-radius: 6px;
+      border: 1.5px solid var(--border); cursor: pointer;
+    }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      background: var(--black); color: var(--white); padding: 12px 22px;
+      border-radius: 10px; font-size: 0.875rem; font-weight: 500;
+      opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 9999;
+      white-space: nowrap;
+    }
+    #toast.show { opacity: 1; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar { width: 100%; height: auto; position: static; flex-direction: row; }
+      .admin-main { margin-left: 0; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="login-card">
+    <h1>Portfolio Admin</h1>
+    <p>Enter your password to continue</p>
+    <input type="password" id="login-password" placeholder="Password" autofocus />
+    <button onclick="doLogin()">Sign in</button>
+    <p id="login-error">Wrong password. Try again.</p>
+  </div>
+</div>
+
+<!-- ── ADMIN SHELL ── -->
+<div id="admin-shell">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        Ronni Admin
+        <span>Portfolio CMS</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="active" onclick="switchTab('hero', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          Hero
+        </a>
+        <a href="#" onclick="switchTab('about', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          About
+        </a>
+        <a href="#" onclick="switchTab('projects', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Projects
+        </a>
+        <a href="#" onclick="switchTab('contact', this)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Contact
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="../index.html" target="_blank">← View site</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+
+      <!-- ── HERO TAB ── -->
+      <div class="tab-panel active" id="tab-hero">
+        <div class="section-header">
+          <h2>Hero Section</h2>
+          <p>The main headline and background of your portfolio.</p>
+        </div>
+
+        <div class="form-card">
+          <h3>Headline Text</h3>
+          <div class="field">
+            <label>Line 1 (plain text)</label>
+            <input type="text" id="hero_line1" placeholder="Design you can" />
+          </div>
+          <div class="field">
+            <label>Italic word</label>
+            <input type="text" id="hero_italic" placeholder="feel." />
+          </div>
+          <div class="field">
+            <label>Line 2</label>
+            <input type="text" id="hero_line2" placeholder="Experiences that resonate." />
+          </div>
+          <div class="field">
+            <label>Subtitle / Body text</label>
+            <textarea id="hero_subtitle" rows="3" placeholder="I'm Ronni, a UX/UI designer..."></textarea>
+          </div>
+          <div class="save-row">
+            <button class="btn-save" onclick="saveHeroText()">Save text</button>
+            <span class="save-msg" id="msg-hero-text"></span>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h3>Background Image</h3>
+          <div class="field">
+            <label>Upload new background</label>
+            <div class="upload-area" onclick="document.getElementById('hero-bg-file').click()">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p>Click to upload (JPG, PNG, WebP)</p>
+              <input type="file" id="hero-bg-file" accept="image/*" onchange="previewImg(this,'hero-bg-preview')" />
+            </div>
+            <img id="hero-bg-preview" class="upload-preview" />
+          </div>
+          <div class="save-row">
+            <button class="btn-save" onclick="uploadHeroBg()">Upload &amp; save</button>
+            <span class="save-msg" id="msg-hero-bg"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ABOUT TAB ── -->
+      <div class="tab-panel" id="tab-about">
+        <div class="section-header">
+          <h2>About Sections</h2>
+          <p>The teaser text and the full About section below the projects.</p>
+        </div>
+
+        <div class="form-card">
+          <h3>About Teaser (section above projects)</h3>
+          <div class="field">
+            <label>Teaser paragraph</label>
+            <textarea id="about_teaser" rows="3" placeholder="I design with clarity and intention..."></textarea>
+            <p class="hint">Wrap a phrase in [[ ]] to make it highlighted. E.g. [[focusing on how things feel]]</p>
+          </div>
+          <div class="save-row">
+            <button class="btn-save" onclick="saveKey('about_teaser','msg-about-teaser')">Save</button>
+            <span class="save-msg" id="msg-about-teaser"></span>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h3>Profile Photo</h3>
+          <div class="field">
+            <div class="upload-area" onclick="document.getElementById('about-photo-file').click()">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p>Click to upload profile photo</p>
+              <input type="file" id="about-photo-file" accept="image/*" onchange="previewImg(this,'about-photo-preview')" />
+            </div>
+            <img id="about-photo-preview" class="upload-preview" />
+          </div>
+          <div class="save-row">
+            <button class="btn-save" onclick="uploadAboutPhoto()">Upload &amp; save</button>
+            <span class="save-msg" id="msg-about-photo"></span>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h3>Who I Am Card</h3>
+          <div class="field">
+            <label>Title (e.g. "Hi, I am Ronni")</label>
+            <input type="text" id="about_who_title" placeholder="Hi, I am Ronni" />
+          </div>
+          <div class="field">
+            <label>Subtitle (e.g. "A UX/UI Designer")</label>
+            <input type="text" id="about_who_subtitle" placeholder="A UX/UI Designer" />
+          </div>
+          <div class="field">
+            <label>Description paragraph</label>
+            <textarea id="about_who_desc" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label>Facts (one per line, wrapped in parentheses)</label>
+            <textarea id="about_facts" rows="4" placeholder="(2+ years of experience)&#10;(Currently working at Elevate Studio)&#10;(Always evolving)&#10;(Adore my kids)"></textarea>
+          </div>
+          <div class="save-row">
+            <button class="btn-save" onclick="saveAboutWho()">Save</button>
+            <span class="save-msg" id="msg-about-who"></span>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h3>Experience</h3>
+          <div id="experience-list"></div>
+          <button class="btn-outline" style="margin-top:12px" onclick="addExperienceRow()">+ Add experience</button>
+          <div class="save-row" style="margin-top:16px">
+            <button class="btn-save" onclick="saveExperience()">Save</button>
+            <span class="save-msg" id="msg-experience"></span>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h3>CV File</h3>
+          <div class="field">
+            <div class="upload-area" onclick="document.getElementById('cv-file').click()">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <p>Click to upload CV (PDF)</p>
+              <input type="file" id="cv-file" accept=".pdf" />
+            </div>
+          </div>
+          <div class="save-row">
+            <button class="btn-save" onclick="uploadCV()">Upload &amp; save</button>
+            <span class="save-msg" id="msg-cv"></span>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h3>Fun Facts</h3>
+          <div class="field">
+            <label>Fun facts (one per line; use | to split into two lines)</label>
+            <textarea id="about_funfacts" rows="6" placeholder="Mom of four&#10;(yes, coffee helps)&#10;I'll never say no to | sweet potato ravioli in rosé sauce.&#10;I lived in Mexico for five years, | and it still feels like home."></textarea>
+            <p class="hint">Each line = one fact. Use | to create a line break within a fact.</p>
+          </div>
+          <div class="save-row">
+            <button class="btn-save" onclick="saveKey('about_funfacts','msg-about-funfacts')">Save</button>
+            <span class="save-msg" id="msg-about-funfacts"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PROJECTS TAB ── -->
+      <div class="tab-panel" id="tab-projects">
+        <div class="section-header">
+          <h2>Projects</h2>
+          <p>Add, edit, or remove your case study cards.</p>
+        </div>
+
+        <div id="projects-list" class="projects-list"></div>
+
+        <button class="btn-save" onclick="openProjectForm(null)">+ New project</button>
+
+        <div class="project-form-wrap" id="project-form-wrap" style="display:none">
+          <h3 id="project-form-title">New project</h3>
+          <input type="hidden" id="pf-id" />
+          <div class="field">
+            <label>Project name</label>
+            <input type="text" id="pf-name" placeholder="HandyMe" />
+          </div>
+          <div class="field">
+            <label>Project image</label>
+            <div class="upload-area" onclick="document.getElementById('pf-img-file').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p>Click to upload image</p>
+              <input type="file" id="pf-img-file" accept="image/*" onchange="previewImg(this,'pf-img-preview')" />
+            </div>
+            <img id="pf-img-preview" class="upload-preview" />
+            <input type="hidden" id="pf-img-url" />
+          </div>
+          <div class="field">
+            <label>Card background colour</label>
+            <div class="color-row">
+              <input type="color" class="color-swatch" id="pf-color" value="#EEEEEE" oninput="document.getElementById('pf-color-hex').value=this.value" />
+              <input type="text" id="pf-color-hex" value="#EEEEEE" style="width:100px" oninput="document.getElementById('pf-color').value=this.value" placeholder="#EEEEEE" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Tags</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="text" id="pf-tag-input" placeholder="Add tag…" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addTag()}" />
+              <button class="btn-outline" onclick="addTag()">Add</button>
+            </div>
+            <div class="tags-input-wrap" id="pf-tags-wrap"></div>
+            <input type="hidden" id="pf-tags" value="[]" />
+          </div>
+          <div class="field">
+            <label>Case study link</label>
+            <input type="text" id="pf-link" placeholder="https://..." />
+          </div>
+          <div class="field">
+            <label>Display order (lower = first)</label>
+            <input type="number" id="pf-order" value="0" min="0" style="width:100px" />
+          </div>
+          <div style="display:flex;gap:10px;margin-top:8px;align-items:center">
+            <button class="btn-save" onclick="saveProject()">Save project</button>
+            <button class="btn-outline" onclick="closeProjectForm()">Cancel</button>
+            <span class="save-msg" id="msg-project"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CONTACT TAB ── -->
+      <div class="tab-panel" id="tab-contact">
+        <div class="section-header">
+          <h2>Contact Section</h2>
+          <p>Heading text, links, and footer info.</p>
+        </div>
+
+        <div class="form-card">
+          <h3>Contact Text</h3>
+          <div class="field">
+            <label>Section title</label>
+            <textarea id="contact_title" rows="2" placeholder="I'm not just here to design products; I'm here to connect with people."></textarea>
+          </div>
+          <div class="field">
+            <label>Email address</label>
+            <input type="email" id="contact_email" placeholder="Ronni210692@gmail.com" />
+          </div>
+          <div class="field">
+            <label>Phone number</label>
+            <input type="tel" id="contact_tel" placeholder="+972-542461587" />
+          </div>
+          <div class="field">
+            <label>LinkedIn URL</label>
+            <input type="url" id="contact_linkedin" placeholder="https://www.linkedin.com/in/..." />
+          </div>
+          <div class="save-row">
+            <button class="btn-save" onclick="saveContact()">Save</button>
+            <span class="save-msg" id="msg-contact"></span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  /* ── CONFIG ── */
+  const SUPABASE_URL = 'https://ivrrohxxbxhlhxohpwsu.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_CHNjIGQrfC_RxOnT_t9J7Q_XrGa4lzN';
+  const ADMIN_PASS   = 'Rc210692';
+  const BUCKET       = 'portfolio-assets';
+
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  /* ── AUTH ── */
+  function doLogin() {
+    const val = document.getElementById('login-password').value;
+    if (val === ADMIN_PASS) {
+      sessionStorage.setItem('admin_ok', '1');
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-shell').style.display = 'block';
+      initAdmin();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  }
+  document.getElementById('login-password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+  if (sessionStorage.getItem('admin_ok') === '1') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-shell').style.display = 'block';
+    initAdmin();
+  }
+
+  /* ── TAB ROUTING ── */
+  function switchTab(name, el) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    el.classList.add('active');
+    return false;
+  }
+
+  /* ── INIT: load existing content ── */
+  async function initAdmin() {
+    const { data } = await db.from('site_content').select('*');
+    if (data) {
+      const map = {};
+      data.forEach(r => { map[r.key] = r.value; });
+
+      const set = (id, val) => {
+        const el = document.getElementById(id);
+        if (el && val !== undefined) el.value = val;
+      };
+
+      set('hero_line1',      map.hero_line1);
+      set('hero_italic',     map.hero_italic);
+      set('hero_line2',      map.hero_line2);
+      set('hero_subtitle',   map.hero_subtitle);
+      set('about_teaser',    map.about_teaser);
+      set('about_who_title', map.about_who_title);
+      set('about_who_subtitle', map.about_who_subtitle);
+      set('about_who_desc',  map.about_who_desc);
+      set('about_facts',     map.about_facts);
+      set('about_funfacts',  map.about_funfacts);
+      set('contact_title',   map.contact_title);
+      set('contact_email',   map.contact_email);
+      set('contact_tel',     map.contact_tel);
+      set('contact_linkedin',map.contact_linkedin);
+
+      if (map.about_profile_image) {
+        showImgPreview('about-photo-preview', map.about_profile_image);
+      }
+      if (map.hero_bg_image) {
+        showImgPreview('hero-bg-preview', map.hero_bg_image);
+      }
+
+      if (map.about_experience) {
+        try {
+          const exp = JSON.parse(map.about_experience);
+          exp.forEach(e => addExperienceRow(e.company, e.location));
+        } catch {}
+      } else {
+        addExperienceRow('Elevate Studio', 'Rehovot, Israel');
+        addExperienceRow('Yeshivat KT', 'Mexico city, Mexico');
+      }
+    } else {
+      addExperienceRow();
+    }
+
+    loadProjects();
+  }
+
+  /* ── HELPERS ── */
+  function toast(msg, isErr) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.style.background = isErr ? '#e53e3e' : '#1a1a1a';
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  function showMsg(id, text, isErr) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    el.className = 'save-msg show ' + (isErr ? 'err' : 'ok');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  function showImgPreview(imgId, url) {
+    const img = document.getElementById(imgId);
+    if (img) { img.src = url; img.style.display = 'block'; }
+  }
+
+  function previewImg(input, imgId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => showImgPreview(imgId, e.target.result);
+    reader.readAsDataURL(file);
+  }
+
+  async function upsertKey(key, value) {
+    const { error } = await db.from('site_content').upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+    return error;
+  }
+
+  async function uploadFile(file, path) {
+    await db.storage.from(BUCKET).remove([path]);
+    const { error } = await db.storage.from(BUCKET).upload(path, file, { upsert: true, contentType: file.type });
+    if (error) return { error };
+    const { data } = db.storage.from(BUCKET).getPublicUrl(path);
+    return { url: data.publicUrl };
+  }
+
+  /* ── SAVE SINGLE KEY ── */
+  async function saveKey(key, msgId) {
+    const val = document.getElementById(key)?.value ?? '';
+    const error = await upsertKey(key, val);
+    if (error) { showMsg(msgId, '✗ ' + error.message, true); toast('Error saving', true); }
+    else        { showMsg(msgId, '✓ Saved'); toast('Saved!'); }
+  }
+
+  /* ── HERO TEXT ── */
+  async function saveHeroText() {
+    const keys = ['hero_line1','hero_italic','hero_line2','hero_subtitle'];
+    const errs = [];
+    for (const k of keys) {
+      const e = await upsertKey(k, document.getElementById(k).value);
+      if (e) errs.push(e.message);
+    }
+    if (errs.length) { showMsg('msg-hero-text', '✗ Error', true); toast('Error saving', true); }
+    else             { showMsg('msg-hero-text', '✓ Saved'); toast('Hero text saved!'); }
+  }
+
+  /* ── HERO BG UPLOAD ── */
+  async function uploadHeroBg() {
+    const file = document.getElementById('hero-bg-file').files[0];
+    if (!file) { showMsg('msg-hero-bg', 'No file selected', true); return; }
+    const btn = event.target;
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    const { url, error } = await uploadFile(file, 'hero-bg.' + file.name.split('.').pop());
+    btn.disabled = false; btn.textContent = 'Upload & save';
+    if (error) { showMsg('msg-hero-bg', '✗ ' + error.message, true); return; }
+    await upsertKey('hero_bg_image', url);
+    showMsg('msg-hero-bg', '✓ Uploaded'); toast('Background saved!');
+  }
+
+  /* ── ABOUT PHOTO UPLOAD ── */
+  async function uploadAboutPhoto() {
+    const file = document.getElementById('about-photo-file').files[0];
+    if (!file) { showMsg('msg-about-photo', 'No file selected', true); return; }
+    const btn = event.target;
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    const { url, error } = await uploadFile(file, 'about-profile.' + file.name.split('.').pop());
+    btn.disabled = false; btn.textContent = 'Upload & save';
+    if (error) { showMsg('msg-about-photo', '✗ ' + error.message, true); return; }
+    await upsertKey('about_profile_image', url);
+    showMsg('msg-about-photo', '✓ Uploaded'); toast('Photo saved!');
+  }
+
+  /* ── ABOUT WHO ── */
+  async function saveAboutWho() {
+    const keys = ['about_who_title','about_who_subtitle','about_who_desc','about_facts'];
+    const errs = [];
+    for (const k of keys) {
+      const e = await upsertKey(k, document.getElementById(k).value);
+      if (e) errs.push(k);
+    }
+    if (errs.length) { showMsg('msg-about-who', '✗ Error', true); }
+    else             { showMsg('msg-about-who', '✓ Saved'); toast('About saved!'); }
+  }
+
+  /* ── EXPERIENCE ── */
+  function addExperienceRow(company, location) {
+    const list = document.getElementById('experience-list');
+    const id = Date.now();
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:10px;margin-bottom:10px;align-items:center';
+    row.id = 'exp-row-' + id;
+    row.innerHTML = `
+      <input type="text" class="exp-company" placeholder="Company" value="${company||''}" style="flex:1">
+      <input type="text" class="exp-location" placeholder="City, Country" value="${location||''}" style="flex:1">
+      <button class="btn-danger" style="padding:8px 12px;flex-shrink:0" onclick="this.parentElement.remove()">✕</button>
+    `;
+    list.appendChild(row);
+  }
+
+  async function saveExperience() {
+    const rows = document.querySelectorAll('#experience-list > div');
+    const exp = Array.from(rows).map(r => ({
+      company:  r.querySelector('.exp-company').value,
+      location: r.querySelector('.exp-location').value
+    })).filter(e => e.company);
+    const error = await upsertKey('about_experience', JSON.stringify(exp));
+    if (error) { showMsg('msg-experience', '✗ Error', true); }
+    else        { showMsg('msg-experience', '✓ Saved'); toast('Experience saved!'); }
+  }
+
+  /* ── CV UPLOAD ── */
+  async function uploadCV() {
+    const file = document.getElementById('cv-file').files[0];
+    if (!file) { showMsg('msg-cv', 'No file selected', true); return; }
+    const btn = event.target;
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+    const { url, error } = await uploadFile(file, 'cv.pdf');
+    btn.disabled = false; btn.textContent = 'Upload & save';
+    if (error) { showMsg('msg-cv', '✗ ' + error.message, true); return; }
+    await upsertKey('contact_cv', url);
+    showMsg('msg-cv', '✓ Uploaded'); toast('CV saved!');
+  }
+
+  /* ── CONTACT ── */
+  async function saveContact() {
+    const keys = ['contact_title','contact_email','contact_tel','contact_linkedin'];
+    const errs = [];
+    for (const k of keys) {
+      const e = await upsertKey(k, document.getElementById(k).value);
+      if (e) errs.push(k);
+    }
+    if (errs.length) { showMsg('msg-contact', '✗ Error', true); }
+    else             { showMsg('msg-contact', '✓ Saved'); toast('Contact saved!'); }
+  }
+
+  /* ── PROJECTS ── */
+  let allProjects = [];
+
+  async function loadProjects() {
+    const { data } = await db.from('projects').select('*').order('display_order');
+    allProjects = data || [];
+    renderProjects();
+  }
+
+  function renderProjects() {
+    const list = document.getElementById('projects-list');
+    if (!allProjects.length) {
+      list.innerHTML = '<p style="color:#999;font-size:.875rem;margin-bottom:16px">No projects yet.</p>';
+      return;
+    }
+    list.innerHTML = allProjects.map(p => `
+      <div class="project-row">
+        ${p.image_url
+          ? `<img class="project-row-img" src="${p.image_url}" alt="${p.name}" />`
+          : `<div class="project-row-img-ph">🖼️</div>`}
+        <div class="project-row-info">
+          <strong>${p.name}</strong>
+          <span>${(p.tags||[]).join(', ') || 'No tags'} · order ${p.display_order}</span>
+        </div>
+        <div class="project-row-actions">
+          <button class="btn-outline" style="font-size:.78rem;padding:6px 12px" onclick="openProjectForm('${p.id}')">Edit</button>
+          <button class="btn-danger"  style="font-size:.78rem;padding:6px 12px" onclick="deleteProject('${p.id}')">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openProjectForm(id) {
+    const wrap = document.getElementById('project-form-wrap');
+    wrap.style.display = 'block';
+    document.getElementById('pf-tags-wrap').innerHTML = '';
+    document.getElementById('pf-tags').value = '[]';
+    document.getElementById('pf-img-preview').style.display = 'none';
+
+    if (!id) {
+      document.getElementById('project-form-title').textContent = 'New project';
+      document.getElementById('pf-id').value = '';
+      document.getElementById('pf-name').value = '';
+      document.getElementById('pf-color').value = '#EEEEEE';
+      document.getElementById('pf-color-hex').value = '#EEEEEE';
+      document.getElementById('pf-link').value = '';
+      document.getElementById('pf-order').value = allProjects.length;
+      document.getElementById('pf-img-url').value = '';
+    } else {
+      const p = allProjects.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('project-form-title').textContent = 'Edit: ' + p.name;
+      document.getElementById('pf-id').value = p.id;
+      document.getElementById('pf-name').value = p.name;
+      document.getElementById('pf-color').value = p.bg_color || '#EEEEEE';
+      document.getElementById('pf-color-hex').value = p.bg_color || '#EEEEEE';
+      document.getElementById('pf-link').value = p.link || '';
+      document.getElementById('pf-order').value = p.display_order || 0;
+      document.getElementById('pf-img-url').value = p.image_url || '';
+      if (p.image_url) showImgPreview('pf-img-preview', p.image_url);
+      document.getElementById('pf-tags').value = JSON.stringify(p.tags || []);
+      renderTags(p.tags || []);
+    }
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function closeProjectForm() {
+    document.getElementById('project-form-wrap').style.display = 'none';
+  }
+
+  function renderTags(tags) {
+    const wrap = document.getElementById('pf-tags-wrap');
+    wrap.innerHTML = tags.map((t, i) => `
+      <span class="tag-chip">${t}<button onclick="removeTag(${i})">×</button></span>
+    `).join('');
+  }
+
+  function addTag() {
+    const inp = document.getElementById('pf-tag-input');
+    const val = inp.value.trim();
+    if (!val) return;
+    const tags = JSON.parse(document.getElementById('pf-tags').value);
+    tags.push(val);
+    document.getElementById('pf-tags').value = JSON.stringify(tags);
+    renderTags(tags);
+    inp.value = '';
+  }
+
+  function removeTag(i) {
+    const tags = JSON.parse(document.getElementById('pf-tags').value);
+    tags.splice(i, 1);
+    document.getElementById('pf-tags').value = JSON.stringify(tags);
+    renderTags(tags);
+  }
+
+  async function saveProject() {
+    const id    = document.getElementById('pf-id').value;
+    const name  = document.getElementById('pf-name').value.trim();
+    if (!name) { showMsg('msg-project', 'Name is required', true); return; }
+
+    const btn = document.querySelector('#project-form-wrap .btn-save');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+
+    let imageUrl = document.getElementById('pf-img-url').value;
+    const imgFile = document.getElementById('pf-img-file').files[0];
+    if (imgFile) {
+      const safeName = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      const { url, error } = await uploadFile(imgFile, `projects/${safeName}.${imgFile.name.split('.').pop()}`);
+      if (error) { showMsg('msg-project', '✗ Upload failed', true); btn.disabled=false; btn.textContent='Save project'; return; }
+      imageUrl = url;
+    }
+
+    const payload = {
+      name,
+      image_url:     imageUrl || null,
+      bg_color:      document.getElementById('pf-color-hex').value || '#EEEEEE',
+      tags:          JSON.parse(document.getElementById('pf-tags').value),
+      link:          document.getElementById('pf-link').value || '#',
+      display_order: parseInt(document.getElementById('pf-order').value) || 0
+    };
+
+    let error;
+    if (id) {
+      ({ error } = await db.from('projects').update(payload).eq('id', id));
+    } else {
+      ({ error } = await db.from('projects').insert(payload));
+    }
+
+    btn.disabled = false; btn.textContent = 'Save project';
+
+    if (error) { showMsg('msg-project', '✗ ' + error.message, true); toast('Error saving project', true); }
+    else {
+      showMsg('msg-project', '✓ Saved'); toast('Project saved!');
+      closeProjectForm();
+      await loadProjects();
+    }
+  }
+
+  async function deleteProject(id) {
+    if (!confirm('Delete this project?')) return;
+    const { error } = await db.from('projects').delete().eq('id', id);
+    if (error) { toast('Error deleting', true); }
+    else { toast('Deleted'); await loadProjects(); }
+  }
+</script>
+</body>
+</html>

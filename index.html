@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&family=Rosarivo:ital@0;1&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -51,10 +52,10 @@
 
     <div class="hero-content">
       <h1 class="hero-title">
-        <span class="line">Design you<br class="br-mobile"> can <em>feel.</em></span>
-        <span class="line">Experiences<br class="br-mobile"> that resonate.</span>
+        <span class="line" id="hero-line1">Design you<br class="br-mobile"> can <em id="hero-italic">feel.</em></span>
+        <span class="line" id="hero-line2">Experiences<br class="br-mobile"> that resonate.</span>
       </h1>
-      <p class="hero-sub">
+      <p class="hero-sub" id="hero-subtitle">
         I'm Ronni, a UX/UI designer based in <span class="strike">Mexico</span> Israel.<br>
         I believe in design where the sky is not the limit,<br>
         but just the beginning.
@@ -74,7 +75,7 @@
 
       <span class="section-pill reveal">• Design, for Me</span>
 
-      <p class="about-text">
+      <p class="about-text" id="about-teaser">
         I design with clarity and intention, <span class="highlight">focusing on how things feel</span> and work for people. I care about small details that make a difference.
       </p>
 
@@ -197,7 +198,7 @@
 
         <!-- Left: sticky photo placeholder -->
         <div class="about-img-wrap">
-          <div class="about-img-ph"></div>
+          <div class="about-img-ph" id="about-profile-img"></div>
         </div>
 
         <!-- Right: info cards -->
@@ -206,9 +207,9 @@
           <!-- Who I Am -->
           <article class="about-card reveal">
             <span class="section-pill">• Who I Am</span>
-            <h3 class="about-card-title">Hi, I am Ronni<br>A UX/UI Designer</h3>
-            <p class="about-card-desc">I believe design should be more than functional; it should be intuitive. My focus is on bringing clarity to your vision – creating digital products that don't just solve problems, but feel effortless to use.</p>
-            <ul class="about-facts">
+            <h3 class="about-card-title" id="about-who-title">Hi, I am Ronni<br>A UX/UI Designer</h3>
+            <p class="about-card-desc" id="about-who-desc">I believe design should be more than functional; it should be intuitive. My focus is on bringing clarity to your vision – creating digital products that don't just solve problems, but feel effortless to use.</p>
+            <ul class="about-facts" id="about-facts">
               <li>(2+ years of experience)</li>
               <li>(Currently working at Elevate Studio)</li>
               <li>(Always evolving)</li>
@@ -219,7 +220,7 @@
           <!-- Experience -->
           <article class="about-card reveal">
             <span class="section-pill">• Experience</span>
-            <div class="about-timeline">
+            <div class="about-timeline" id="about-timeline">
               <div class="timeline-item">
                 <strong>Elevate Studio</strong>
                 <span>Rehovot, Israel</span>
@@ -229,7 +230,7 @@
                 <span>Mexico city, Mexico</span>
               </div>
             </div>
-            <a href="#" class="cv-link">
+            <a href="assets/cv.pdf" class="cv-link" id="cv-link">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>
               Download cv
             </a>
@@ -238,7 +239,7 @@
           <!-- Fun Facts -->
           <article class="about-card reveal">
             <span class="section-pill">• Fun facts about me</span>
-            <div class="about-funfacts">
+            <div class="about-funfacts" id="about-funfacts">
               <div class="funfact-item">
                 <p>Mom of four</p>
                 <p class="funfact-sub">(yes, coffee helps)</p>
@@ -265,19 +266,19 @@
 
       <span class="section-pill reveal">• Contact me</span>
 
-      <h2 class="contact-title reveal">
+      <h2 class="contact-title reveal" id="contact-title">
         I'm not just here to design products;<br>
         I'm here to connect with people.
       </h2>
 
       <div class="contact-btns reveal">
-        <a href="assets/cv.pdf" download class="btn btn-dark">Download my cv</a>
-        <a href="https://www.linkedin.com/in/ronni-cohen-ux" target="_blank" class="btn btn-light">Read my Linkedin</a>
+        <a href="assets/cv.pdf" download class="btn btn-dark" id="contact-cv-btn">Download my cv</a>
+        <a href="https://www.linkedin.com/in/ronni-cohen-ux" target="_blank" class="btn btn-light" id="contact-linkedin-btn">Read my Linkedin</a>
       </div>
 
       <div class="contact-details reveal">
-        <p>Email: <a href="mailto:Ronni210692@gmail.com">Ronni210692@gmail.com</a></p>
-        <p>Tel: <a href="tel:+972542461587">+972-542461587</a></p>
+        <p>Email: <a href="mailto:Ronni210692@gmail.com" id="contact-email">Ronni210692@gmail.com</a></p>
+        <p>Tel: <a href="tel:+972542461587" id="contact-tel">+972-542461587</a></p>
       </div>
 
     </div>
