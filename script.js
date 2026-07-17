@@ -46,6 +46,7 @@
       if (el) {
         const html = c.about_teaser.replace(/\[\[(.+?)\]\]/g, '<span class="highlight">$1</span>');
         el.innerHTML = html;
+        initWordReveal();
       }
     }
 
@@ -313,11 +314,14 @@ document.querySelectorAll('.reveal').forEach((el) => {
 /* ──────────────────────────────────────
    ABOUT TEXT — word-by-word unblur on scroll
 ────────────────────────────────────── */
-(function initWordReveal() {
+let _wordRevealCleanup = null;
+
+function initWordReveal() {
+  if (_wordRevealCleanup) { _wordRevealCleanup(); _wordRevealCleanup = null; }
+
   const el = document.querySelector('.about-text');
   if (!el) return;
 
-  // Wrap every word in a span, preserving child elements (e.g. .highlight)
   function wrapWords(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       const parts = node.textContent.split(/(\s+)/);
@@ -346,9 +350,7 @@ document.querySelectorAll('.reveal').forEach((el) => {
   function update() {
     const rect = el.getBoundingClientRect();
     const vh   = window.innerHeight;
-    // progress 0 = element at bottom of screen, 1 = element top at 25% from top
     const progress = (vh - rect.top) / (vh * 0.75);
-
     words.forEach((word, i) => {
       const wp = Math.max(0, Math.min(1, (progress * total - i * 0.7) / 2));
       word.style.opacity = 0.15 + wp * 0.85;
@@ -357,8 +359,11 @@ document.querySelectorAll('.reveal').forEach((el) => {
   }
 
   window.addEventListener('scroll', update, { passive: true });
+  _wordRevealCleanup = () => window.removeEventListener('scroll', update);
   update();
-})();
+}
+
+initWordReveal();
 
 /* ──────────────────────────────────────
    HERO bg subtle parallax on scroll
