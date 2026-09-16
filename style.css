@@ -395,6 +395,7 @@ body {
 /* Coloured image area — no radius, card clips it */
 .card-img {
   display: flex;
+  position: relative;
   width: 100%;
   aspect-ratio: 100 / 62;
   align-items: center;
@@ -1194,4 +1195,39 @@ body {
   .site-footer {
     padding-bottom: 24px;
   }
+}
+
+/* ══════════════════════════════
+   COMING SOON OVERLAY
+══════════════════════════════ */
+.coming-soon-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.project-card:hover .coming-soon-overlay {
+  opacity: 1;
+}
+
+.coming-soon-overlay span {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: translateY(8px);
+  transition: transform 0.35s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.project-card:hover .coming-soon-overlay span {
+  transform: translateY(0);
 }

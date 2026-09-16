@@ -157,6 +157,24 @@
     .color-row { display:flex; align-items:center; gap:8px; }
     .color-swatch { width:30px; height:30px; border-radius:4px; border:1px solid var(--border); cursor:pointer; flex-shrink:0; }
 
+    /* CASE STUDY EDITOR */
+    .cs-toggle-row { display:flex; align-items:center; gap:10px; padding:12px 0; border-top:1px solid var(--border); margin-top:8px; }
+    .cs-toggle-row label { font-size:.85rem; font-weight:600; cursor:pointer; }
+    input[type=checkbox].cs-toggle { width:36px; height:20px; cursor:pointer; accent-color:var(--accent); }
+    .cs-editor { margin-top:16px; border-top:2px solid var(--accent); padding-top:16px; display:none; }
+    .cs-editor.open { display:block; }
+    .cs-section-label { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); margin:20px 0 10px; }
+    .cs-block-row { background:#f8f8f8; border:1px solid var(--border); border-radius:4px; padding:12px; margin-bottom:8px; }
+    .cs-block-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+    .cs-block-type-badge { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:2px 8px; border-radius:20px; }
+    .cs-block-type-badge.image { background:#fef3c7; color:#92400e; }
+    .cs-block-type-badge.text  { background:#e0f2fe; color:#0369a1; }
+    .cs-block-type-badge.video { background:#fce7f3; color:#9d174d; }
+    .cs-block-actions { margin-left:auto; display:flex; gap:6px; }
+    .meta-row { display:flex; gap:8px; margin-bottom:8px; align-items:center; }
+    .meta-row input { flex:1; }
+    #cs-blocks-list .drag-handle { cursor:grab; color:#ccc; padding:0 4px; font-size:1rem; }
+
     /* EXPERIENCE / MENU ROWS */
     .exp-row, .menu-row { display:flex; gap:8px; margin-bottom:8px; align-items:center; }
     .exp-row input, .menu-row input { flex:1; }
@@ -711,6 +729,7 @@ function openProjectForm(id) {
   const tagChips = (p ? (p.tags||[]) : []).map(function(t,i) {
     return '<span class="tag-chip">' + esc(t) + '<button onclick="removeTag(' + i + ')">×</button></span>';
   }).join('');
+  const hasCs = p && p.has_case_study;
 
   const wrap = g('project-form-wrap');
   if (!wrap) return;
@@ -734,14 +753,134 @@ function openProjectForm(id) {
     '<div class="field"><label>Card background colour</label><div class="color-row">' +
     '<input type="color" class="color-swatch" id="pf-color" value="' + esc(p?p.bg_color:'#EEEEEE') + '" oninput="g(\'pf-color-hex\').value=this.value" />' +
     '<input type="text" id="pf-color-hex" value="' + esc(p?p.bg_color:'#EEEEEE') + '" style="width:90px" oninput="g(\'pf-color\').value=this.value" /></div></div>' +
-    '<div class="field"><label>Case study link</label><input id="pf-link" type="url" value="' + esc(p?p.link:'') + '" placeholder="https://…" /></div>' +
     '<input type="hidden" id="pf-order" value="' + (p?p.display_order:S.projects.length) + '" />' +
-    '<div style="display:flex;gap:8px;align-items:center;margin-top:12px">' +
+
+    /* ── Case study toggle ── */
+    '<div class="cs-toggle-row">' +
+    '<input type="checkbox" class="cs-toggle" id="pf-has-cs" ' + (hasCs?'checked':'') + ' onchange="toggleCsEditor(this.checked)" />' +
+    '<label for="pf-has-cs">Has a case study page</label></div>' +
+
+    /* ── Case study editor (hidden unless toggled) ── */
+    '<div class="cs-editor' + (hasCs?' open':'') + '" id="cs-editor">' +
+
+    '<div class="cs-section-label">Left panel — Info</div>' +
+    '<div class="field-row">' +
+    '<div class="field"><label>Pill label</label><input id="pf-cs-pill" value="' + esc(p&&p.cs_pill?p.cs_pill:'• The project') + '" /></div>' +
+    '<div class="field"><label>URL slug *</label><input id="pf-cs-slug" value="' + esc(p&&p.slug?p.slug:'') + '" placeholder="aquadrone" /></div></div>' +
+    '<div class="field"><label>Description</label><textarea id="pf-cs-desc" rows="3">' + esc(p&&p.cs_description?p.cs_description:'') + '</textarea></div>' +
+    '<div class="field-row">' +
+    '<div class="field"><label>CTA button label</label><input id="pf-cs-cta-label" value="' + esc(p&&p.cs_cta_label?p.cs_cta_label:'Visit Website') + '" /></div>' +
+    '<div class="field"><label>CTA URL</label><input id="pf-cs-cta-url" type="url" value="' + esc(p&&p.cs_cta_url?p.cs_cta_url:'') + '" placeholder="https://…" /></div></div>' +
+
+    '<div class="cs-section-label">Metadata rows</div>' +
+    '<div id="cs-meta-rows"></div>' +
+    '<button class="btn-outline" style="font-size:.78rem;margin-bottom:4px" onclick="addCsMetaRow()">+ Add row</button>' +
+
+    '<div class="cs-section-label">Right panel — Blocks</div>' +
+    '<div id="cs-blocks-list"></div>' +
+    '<div style="display:flex;gap:8px;margin-top:6px">' +
+    '<button class="btn-outline" style="font-size:.78rem" onclick="addCsBlock(\'image\')">+ Image</button>' +
+    '<button class="btn-outline" style="font-size:.78rem" onclick="addCsBlock(\'text\')">+ Text</button>' +
+    '<button class="btn-outline" style="font-size:.78rem" onclick="addCsBlock(\'video\')">+ Video</button>' +
+    '</div></div>' +
+
+    '<div style="display:flex;gap:8px;align-items:center;margin-top:16px">' +
     '<button class="btn-save" id="pf-submit" onclick="saveProject()">Save project</button>' +
     '<button class="btn-outline" onclick="closeProjectForm()">Cancel</button>' +
     '<span class="save-msg" id="msg-pf"></span></div></div>';
 
+  // Init meta rows
+  window._csBlocks = [];
+  window._csMeta   = [];
+  if (p && p.cs_meta)   { try { window._csMeta   = JSON.parse(typeof p.cs_meta   === 'string' ? p.cs_meta   : JSON.stringify(p.cs_meta));   } catch {} }
+  if (p && p.cs_blocks) { try { window._csBlocks = JSON.parse(typeof p.cs_blocks === 'string' ? p.cs_blocks : JSON.stringify(p.cs_blocks)); } catch {} }
+
+  renderCsMeta();
+  renderCsBlocks();
   wrap.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function toggleCsEditor(on) {
+  const el = g('cs-editor');
+  if (el) el.classList.toggle('open', on);
+}
+
+/* ── Meta rows ── */
+function renderCsMeta() {
+  const wrap = g('cs-meta-rows'); if (!wrap) return;
+  wrap.innerHTML = (window._csMeta||[]).map(function(r,i) {
+    return '<div class="meta-row">' +
+      '<input type="text" class="cs-meta-label-inp" placeholder="Label" value="' + esc(r.label||'') + '" oninput="updateCsMeta(' + i + ',\'label\',this.value)" />' +
+      '<input type="text" class="cs-meta-value-inp" placeholder="Value" value="' + esc(r.value||'') + '" oninput="updateCsMeta(' + i + ',\'value\',this.value)" />' +
+      '<button class="btn-danger" onclick="removeCsMetaRow(' + i + ')">✕</button></div>';
+  }).join('');
+}
+function addCsMetaRow() {
+  (window._csMeta = window._csMeta||[]).push({label:'',value:''});
+  renderCsMeta();
+}
+function removeCsMetaRow(i) { window._csMeta.splice(i,1); renderCsMeta(); }
+function updateCsMeta(i,key,val) { if(window._csMeta[i]) window._csMeta[i][key]=val; }
+
+/* ── Blocks ── */
+function renderCsBlocks() {
+  const wrap = g('cs-blocks-list'); if (!wrap) return;
+  wrap.innerHTML = (window._csBlocks||[]).map(function(b,i) {
+    var badge = '<span class="cs-block-type-badge ' + b.type + '">' + b.type + '</span>';
+    var fields = '';
+    if (b.type === 'image') {
+      fields = '<div class="field"><label>Image URL</label><input value="' + esc(b.src||'') + '" oninput="updateCsBlock(' + i + ',\'src\',this.value)" placeholder="https://… or upload below" /></div>' +
+        '<div class="field"><label>Upload image</label><div class="upload-area" onclick="g(\'cs-block-file-' + i + '\').click()">' +
+        '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Choose file' +
+        '<input type="file" id="cs-block-file-' + i + '" accept="image/*" style="display:none" data-block-idx="' + i + '" onchange="queueBlockImg(this,' + i + ')" /></div>' +
+        (b.src ? '<img src="' + esc(b.src) + '" style="max-height:80px;margin-top:6px;border-radius:4px;display:block" />' : '') + '</div>' +
+        '<div class="field"><label>Alt text</label><input value="' + esc(b.alt||'') + '" oninput="updateCsBlock(' + i + ',\'alt\',this.value)" /></div>';
+    } else if (b.type === 'text') {
+      fields = '<div class="field"><label>Pill (optional)</label><input value="' + esc(b.pill||'') + '" oninput="updateCsBlock(' + i + ',\'pill\',this.value)" placeholder="• The Challenge" /></div>' +
+        '<div class="field"><label>Heading</label><input value="' + esc(b.heading||'') + '" oninput="updateCsBlock(' + i + ',\'heading\',this.value)" /></div>' +
+        '<div class="field"><label>Body text</label><textarea rows="4" oninput="updateCsBlock(' + i + ',\'body\',this.value)">' + esc(b.body||'') + '</textarea></div>';
+    } else if (b.type === 'video') {
+      fields = '<div class="field"><label>Video URL (YouTube / Vimeo)</label><input value="' + esc(b.url||'') + '" oninput="updateCsBlock(' + i + ',\'url\',this.value)" placeholder="https://www.youtube.com/watch?v=…" /></div>';
+    }
+    return '<div class="cs-block-row" data-block-idx="' + i + '">' +
+      '<div class="cs-block-header">' +
+      '<span class="drag-handle">⠿</span>' + badge +
+      '<div class="cs-block-actions">' +
+      (i > 0 ? '<button class="btn-outline" style="font-size:.7rem;padding:3px 7px" onclick="moveCsBlock(' + i + ',-1)">↑</button>' : '') +
+      (i < (window._csBlocks.length-1) ? '<button class="btn-outline" style="font-size:.7rem;padding:3px 7px" onclick="moveCsBlock(' + i + ',1)">↓</button>' : '') +
+      '<button class="btn-danger" style="font-size:.7rem;padding:3px 7px" onclick="removeCsBlock(' + i + ')">Remove</button>' +
+      '</div></div>' + fields + '</div>';
+  }).join('');
+}
+function addCsBlock(type) {
+  var b = {type:type, id: Date.now().toString(36)};
+  (window._csBlocks = window._csBlocks||[]).push(b);
+  renderCsBlocks();
+}
+function removeCsBlock(i) { window._csBlocks.splice(i,1); renderCsBlocks(); }
+function moveCsBlock(i, dir) {
+  var j = i + dir;
+  if (j < 0 || j >= window._csBlocks.length) return;
+  var tmp = window._csBlocks[i]; window._csBlocks[i] = window._csBlocks[j]; window._csBlocks[j] = tmp;
+  renderCsBlocks();
+}
+function updateCsBlock(i, key, val) { if(window._csBlocks[i]) window._csBlocks[i][key]=val; }
+window._pendingBlockFiles = {};
+function queueBlockImg(input, idx) {
+  if (!input.files[0]) return;
+  window._pendingBlockFiles[idx] = input.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const existing = input.closest('.field').querySelector('img');
+    if (existing) { existing.src = e.target.result; }
+    else {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.style.cssText = 'max-height:80px;margin-top:6px;border-radius:4px;display:block';
+      input.closest('.field').appendChild(img);
+    }
+  };
+  reader.readAsDataURL(input.files[0]);
 }
 
 function closeProjectForm() {
@@ -770,8 +909,9 @@ async function saveProject() {
   if (!name) { showPfMsg('Name is required', true); return; }
   const id = val('pf-id');
   const btn = g('pf-submit');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>'; }
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving…'; }
 
+  // Preview image upload
   let imageUrl = id ? (S.projects.find(p=>p.id===id)||{}).image_url || null : null;
   const imgFile = g('pf-img-file') && g('pf-img-file').files[0];
   if (imgFile) {
@@ -781,12 +921,33 @@ async function saveProject() {
     imageUrl = url;
   }
 
+  // Upload any pending block images
+  const pending = window._pendingBlockFiles || {};
+  for (const idx in pending) {
+    const file = pending[idx];
+    const safeName = name.toLowerCase().replace(/[^a-z0-9]/g,'-');
+    const {url, error} = await uploadFile(file, 'projects/' + safeName + '-block-' + idx + '.' + file.name.split('.').pop());
+    if (error) { showPfMsg('✗ Block image upload: ' + error.message, true); if(btn){btn.disabled=false;btn.textContent='Save project';} return; }
+    if (window._csBlocks[idx]) window._csBlocks[idx].src = url;
+  }
+  window._pendingBlockFiles = {};
+
+  const hasCs = g('pf-has-cs') && g('pf-has-cs').checked;
+  const slug  = g('pf-cs-slug') ? val('pf-cs-slug').trim().toLowerCase().replace(/[^a-z0-9-]/g,'-') : '';
+
   const payload = {
     name, image_url: imageUrl||null,
     bg_color: val('pf-color-hex')||'#EEEEEE',
     tags: JSON.parse(g('pf-tags-data').value),
-    link: val('pf-link')||'#',
-    display_order: parseInt(val('pf-order'))||0
+    display_order: parseInt(val('pf-order'))||0,
+    has_case_study: hasCs,
+    slug: hasCs ? (slug || null) : null,
+    cs_pill:        hasCs ? (val('pf-cs-pill')||null) : null,
+    cs_description: hasCs ? (val('pf-cs-desc')||null) : null,
+    cs_cta_label:   hasCs ? (val('pf-cs-cta-label')||null) : null,
+    cs_cta_url:     hasCs ? (val('pf-cs-cta-url')||null) : null,
+    cs_meta:        hasCs ? (window._csMeta||[]) : [],
+    cs_blocks:      hasCs ? (window._csBlocks||[]) : [],
   };
 
   let error;

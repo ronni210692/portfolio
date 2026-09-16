@@ -231,10 +231,15 @@
                <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><rect x="8" y="11" width="36" height="30" rx="4" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="23" r="4" fill="currentColor"/><path d="M8 37 L20 25 L29 33 L37 23 L44 37" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
              </div>`;
         const tags = (p.tags || []).map(t => `<li>${t}</li>`).join('');
+        const hasCaseStudy = p.has_case_study && p.slug;
+        const href = hasCaseStudy ? `projects/?slug=${p.slug}` : '#';
+        const overlay = !hasCaseStudy
+          ? `<div class="coming-soon-overlay"><span>Coming soon</span></div>`
+          : '';
         return `
           <article class="project-card reveal${delay}">
-            <a href="${p.link || '#'}" class="card-img" style="background:${p.bg_color || '#EEEEEE'};">
-              ${img}
+            <a href="${href}" class="card-img" style="background:${p.bg_color || '#EEEEEE'};">
+              ${img}${overlay}
             </a>
             <div class="card-meta">
               <span class="card-name">${p.name}</span>
