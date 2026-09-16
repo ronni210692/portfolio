@@ -57,7 +57,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Google Sans', 'Nunito Sans', sans-serif;
+  font-family: 'Google Sans', sans-serif;
   background: #F7F6F7;
   color: var(--black);
   -webkit-font-smoothing: antialiased;
@@ -137,7 +137,7 @@ body {
   border-radius: 980px;
   background: var(--black);
   color: var(--white);
-  font-family: 'Google Sans', 'Nunito Sans', sans-serif;
+  font-family: 'Google Sans', sans-serif;
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
@@ -285,7 +285,7 @@ body {
 
 .hero-title .line {
   display: block;
-  font-family: 'Google Sans', 'Nunito Sans', sans-serif;
+  font-family: 'Google Sans', sans-serif;
   font-size: clamp(36px, 5.2vw, 66px);
   font-weight: 500;
   line-height: 1.12;
@@ -294,7 +294,7 @@ body {
 }
 
 .hero-title em {
-  font-family: 'Rosarivo', serif;
+  font-family: 'Google Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -329,7 +329,7 @@ body {
   justify-content: center;
   padding: 13px 36px;
   border-radius: 980px;
-  font-family: 'Google Sans', 'Nunito Sans', sans-serif;
+  font-family: 'Google Sans', sans-serif;
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
@@ -516,7 +516,7 @@ body {
 
 /* Same font & weight as .projects-title */
 .benefits-title {
-  font-family: 'Google Sans', 'Nunito Sans', sans-serif;
+  font-family: 'Google Sans', sans-serif;
   font-size: clamp(28px, 3.6vw, 52px);
   font-weight: 500;
   color: var(--black);
@@ -566,7 +566,7 @@ body {
 }
 
 .bento-title {
-  font-family: 'Rosarivo', serif;
+  font-family: 'Google Sans', sans-serif;
   font-size: clamp(20px, 1.9vw, 28px);
   font-weight: 400;
   color: var(--black);
@@ -649,7 +649,7 @@ body {
 }
 
 .happy-text {
-  font-family: 'Rosarivo', serif;
+  font-family: 'Google Sans', sans-serif;
   font-size: clamp(18px, 2vw, 28px);
   font-weight: 400;
   color: var(--black);
@@ -668,7 +668,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Google Sans', 'Nunito Sans', sans-serif;
+  font-family: 'Google Sans', sans-serif;
   font-size: 17px;
   font-weight: 600;
   color: #fff;
@@ -1262,13 +1262,13 @@ body {
 
 .coming-soon-overlay span {
   color: #fff;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   transform: translateY(8px);
   transition: transform 0.35s ease;
-  font-family: 'Google Sans', 'Nunito Sans', sans-serif;
+  font-family: 'Google Sans', sans-serif;
 }
 
 .project-card:hover .coming-soon-overlay span {
