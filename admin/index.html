@@ -519,10 +519,13 @@ function tplHomepage() {
   h += '<div class="field"><label>Facts (one per line)</label><textarea id="f-about_facts" rows="4">' + esc(c.about_facts||'') + '</textarea></div>';
   h += '<div class="sub-label">Experience</div><div id="exp-rows"></div>';
   h += '<button class="btn-outline" style="margin-top:6px;font-size:.78rem" onclick="addExpRow()">+ Add row</button>';
-  h += '<div class="sub-label">CV File</div>' + cvLink;
+  h += '<div class="sub-label">CV File</div>';
+  h += '<p style="font-size:.75rem;color:var(--gray);margin-bottom:10px">Controls both the "Download CV" button in Experience and the one in Contact — opens in a new tab.</p>';
+  h += cvLink;
   h += '<div class="field"><div class="upload-area" onclick="g(\'u-cv\').click()">';
   h += '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
-  h += 'Upload CV (PDF)<input type="file" id="u-cv" accept=".pdf" style="display:none" /></div></div>';
+  h += '<span id="u-cv-label">Upload CV (PDF)</span>';
+  h += '<input type="file" id="u-cv" accept=".pdf" style="display:none" onchange="g(\'u-cv-label\').textContent=this.files[0]?this.files[0].name:\'Upload CV (PDF)\'" /></div></div>';
   h += '<div class="sub-label">Fun Facts</div>';
   h += '<div class="field"><label>One fact per line · Use | for a line break within a fact</label>';
   h += '<textarea id="f-about_funfacts" rows="5">' + esc(c.about_funfacts||'') + '</textarea></div>';

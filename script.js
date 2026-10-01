@@ -103,9 +103,9 @@
     /* CV link */
     if (c.contact_cv) {
       const el = document.getElementById('cv-link');
-      if (el) el.href = c.contact_cv;
+      if (el) { el.href = c.contact_cv; el.setAttribute('target', '_blank'); el.setAttribute('rel', 'noopener'); }
       const btn = document.getElementById('contact-cv-btn');
-      if (btn) { btn.href = c.contact_cv; btn.setAttribute('download', ''); }
+      if (btn) { btn.href = c.contact_cv; btn.setAttribute('target', '_blank'); btn.setAttribute('rel', 'noopener'); btn.removeAttribute('download'); }
     }
 
     /* Fun facts */
