@@ -199,6 +199,17 @@
       }
     }
 
+    /* Resume file: replace any nav link labeled "Resume" (case-insensitive) with the uploaded file URL */
+    if (c.nav_resume_url) {
+      document.querySelectorAll('#nav-links a, #mobile-menu a').forEach(a => {
+        if (a.textContent.trim().toLowerCase() === 'resume') {
+          a.href = c.nav_resume_url;
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener');
+        }
+      });
+    }
+
     /* Contact */
     if (c.contact_title) {
       const el = document.getElementById('contact-title');
