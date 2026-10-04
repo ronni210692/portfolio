@@ -281,7 +281,7 @@ const DEFAULTS = {
   contact_title:"I'm not just here to design products;\nI'm here to connect with people.",
   contact_email:'Ronni210692@gmail.com', contact_tel:'+972-542461587',
   contact_linkedin:'https://www.linkedin.com/in/ronni-cohen-ux',
-  nav_links:JSON.stringify([{label:'About',url:'#about'},{label:'Projects',url:'#projects'},{label:'Resume',url:'#resume'}]),
+  nav_links:JSON.stringify([{label:'About',url:'#about-full'},{label:'Projects',url:'#projects'},{label:'Resume',url:'#resume'}]),
   nav_cta_label:'Contact', nav_cta_url:'#contact',
   anchor_about:'about', anchor_projects:'projects',
   anchor_about_full:'about-full', anchor_contact:'contact',
@@ -1025,7 +1025,7 @@ function afterMenus() {
   try {
     const links = JSON.parse(S.content.nav_links || '[]');
     if (links.length) links.forEach(l => addNavRow(l.label, l.url));
-    else { addNavRow('About','#about'); addNavRow('Projects','#projects'); addNavRow('Resume','#resume'); }
+    else { addNavRow('About','#about-full'); addNavRow('Projects','#projects'); addNavRow('Resume','#resume'); }
   } catch { addNavRow(); }
 }
 

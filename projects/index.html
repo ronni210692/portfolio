@@ -194,7 +194,7 @@
   <nav class="nav" id="main-nav">
     <a href="../" class="nav-logo" style="text-decoration:none;color:inherit">Ronni</a>
     <ul class="nav-links" id="nav-links">
-      <li><a href="../#about">About</a></li>
+      <li><a href="../#about-full">About</a></li>
       <li><a href="../#projects">Projects</a></li>
       <li><a href="../#resume">Resume</a></li>
     </ul>
@@ -206,7 +206,7 @@
 
   <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
     <ul>
-      <li><a href="../#about"    onclick="closeMobileMenu()">About</a></li>
+      <li><a href="../#about-full"    onclick="closeMobileMenu()">About</a></li>
       <li><a href="../#projects" onclick="closeMobileMenu()">Projects</a></li>
       <li><a href="../#resume"   onclick="closeMobileMenu()">Resume</a></li>
       <li><a href="../#contact"  onclick="closeMobileMenu()">Contact</a></li>
@@ -256,10 +256,27 @@
     </div>
   </div>
 
-  <footer class="site-footer" style="margin-top:40px">
-    <div class="footer-line"></div>
-    <p class="footer-copy">© 2026 Ronni Cohen</p>
-  </footer>
+  <section class="contact" id="contact" style="margin-top:40px">
+    <div class="contact-inner">
+      <span class="section-pill" id="contact-pill">• Contact me</span>
+      <h2 class="contact-title" id="contact-title">
+        I'm not just here to design products;<br>
+        I'm here to connect with people.
+      </h2>
+      <div class="contact-btns">
+        <a href="../assets/cv.pdf" target="_blank" rel="noopener" class="btn btn-dark" id="contact-cv-btn">Download my cv</a>
+        <a href="https://www.linkedin.com/in/ronni-cohen-ux" target="_blank" class="btn btn-light" id="contact-linkedin-btn">Read my Linkedin</a>
+      </div>
+      <div class="contact-details">
+        <p>Email: <a href="mailto:Ronni210692@gmail.com" id="contact-email">Ronni210692@gmail.com</a></p>
+        <p>Tel: <a href="tel:+972542461587" id="contact-tel">+972-542461587</a></p>
+      </div>
+    </div>
+    <footer class="site-footer">
+      <div class="footer-line"></div>
+      <p class="footer-copy">© 2026 Ronni Cohen</p>
+    </footer>
+  </section>
 
   <script src="../script.js"></script>
   <script>
