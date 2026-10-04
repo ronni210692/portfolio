@@ -475,8 +475,9 @@ function tplHomepage() {
 
   /* Hero */
   h += '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">Hero</div><div class="section-card-body">';
-  h += '<div class="field-row"><div class="field"><label>Line 1</label><input id="f-hero_line1" value="' + esc(c.hero_line1||'') + '" /></div>';
-  h += '<div class="field" style="max-width:130px"><label>Italic word</label><input id="f-hero_italic" value="' + esc(c.hero_italic||'') + '" /></div></div>';
+  const line1Default = (c.hero_line1||'') + (c.hero_italic && !c.hero_line1.includes('{{') ? ' {{' + c.hero_italic + '}}' : '');
+  h += '<div class="field"><label>Line 1</label><input id="f-hero_line1" value="' + esc(line1Default) + '" />';
+  h += '<span class="field-hint"><code>{{word}}</code> = serif italic word (e.g. <em>feel.</em>)</span></div>';
   h += '<div class="field"><label>Line 2</label><input id="f-hero_line2" value="' + esc(c.hero_line2||'') + '" /></div>';
   h += '<div class="field"><label>Subtitle text</label><textarea id="f-hero_subtitle" rows="3">' + esc(c.hero_subtitle||'') + '</textarea><span class="field-hint">New line = line break on site &nbsp;·&nbsp; <code>~~word~~</code> = <s>strikethrough</s> in light gray</span></div>';
   h += '<div class="field"><label>Background image</label>' + heroImgPrev;
@@ -576,7 +577,7 @@ async function saveAllHomepage() {
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving…'; }
 
   const textKeys = [
-    'hero_line1','hero_italic','hero_line2','hero_subtitle',
+    'hero_line1','hero_line2','hero_subtitle',
     'about_teaser_pill','about_teaser',
     'projects_pill','projects_title','projects_sub',
     'about_full_pill','about_full_title','about_full_sub',

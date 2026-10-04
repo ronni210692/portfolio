@@ -19,8 +19,12 @@
     if (c.hero_line1) {
       const el = document.getElementById('hero-line1');
       if (el) {
-        const italic = c.hero_italic ? `<em id="hero-italic">${c.hero_italic}</em>` : '';
-        el.innerHTML = `${c.hero_line1}<br class="br-mobile"> ${italic}`;
+        if (c.hero_line1.includes('{{')) {
+          el.innerHTML = c.hero_line1.replace(/\{\{(.+?)\}\}/g, '<em id="hero-italic">$1</em>');
+        } else {
+          const italic = c.hero_italic ? `<em id="hero-italic">${c.hero_italic}</em>` : '';
+          el.innerHTML = `${c.hero_line1}<br class="br-mobile"> ${italic}`;
+        }
       }
     }
     if (c.hero_line2) {
@@ -181,13 +185,28 @@
         const links = JSON.parse(c.nav_links);
         const navEl = document.getElementById('nav-links');
         const mobileMenu = document.getElementById('mobile-menu')?.querySelector('ul');
+        /* On subpages (e.g. /projects/), anchor-only links need a ../ prefix to go back to the main page */
+        const pathDepth = window.location.pathname.replace(/^\/|\/$/g, '').split('/').filter(Boolean).length;
+        const prefix = pathDepth > 1 ? '../' : '';
+        const fixHref = url => url.startsWith('#') ? prefix + url : url;
+        /* Resume file: replace #resume link with uploaded file URL */
+        const resolveUrl = (l) => {
+          if (c.nav_resume_url && l.label.trim().toLowerCase() === 'resume') {
+            return { href: c.nav_resume_url, target: ' target="_blank" rel="noopener"' };
+          }
+          return { href: fixHref(l.url), target: '' };
+        };
         if (navEl && links.length) {
-          navEl.innerHTML = links.map(l => `<li><a href="${l.url}">${l.label}</a></li>`).join('');
+          navEl.innerHTML = links.map(l => {
+            const { href, target } = resolveUrl(l);
+            return `<li><a href="${href}"${target}>${l.label}</a></li>`;
+          }).join('');
         }
         if (mobileMenu && links.length) {
-          mobileMenu.innerHTML = links.map(l =>
-            `<li><a href="${l.url}" onclick="closeMobileMenu()">${l.label}</a></li>`
-          ).join('') + `<li><a href="${c.nav_cta_url||'#contact'}" onclick="closeMobileMenu()">${c.nav_cta_label||'Contact'}</a></li>`;
+          mobileMenu.innerHTML = links.map(l => {
+            const { href, target } = resolveUrl(l);
+            return `<li><a href="${href}"${target} onclick="closeMobileMenu()">${l.label}</a></li>`;
+          }).join('') + `<li><a href="${fixHref(c.nav_cta_url||'#contact')}" onclick="closeMobileMenu()">${c.nav_cta_label||'Contact'}</a></li>`;
         }
       } catch {}
     }
@@ -199,16 +218,6 @@
       }
     }
 
-    /* Resume file: replace any nav link labeled "Resume" (case-insensitive) with the uploaded file URL */
-    if (c.nav_resume_url) {
-      document.querySelectorAll('#nav-links a, #mobile-menu a').forEach(a => {
-        if (a.textContent.trim().toLowerCase() === 'resume') {
-          a.href = c.nav_resume_url;
-          a.setAttribute('target', '_blank');
-          a.setAttribute('rel', 'noopener');
-        }
-      });
-    }
 
     /* Contact */
     if (c.contact_title) {

@@ -1,3 +1,6 @@
+/* ── Rosarivo (serif) — hero italic word only ── */
+@import url('https://fonts.googleapis.com/css2?family=Rosarivo:ital@0;1&display=swap');
+
 /* ── Google Sans self-hosted ── */
 @font-face {
   font-family: 'Google Sans';
@@ -294,8 +297,8 @@ body {
 }
 
 .hero-title em {
-  font-family: 'Google Sans', sans-serif;
-  font-style: normal;
+  font-family: 'Rosarivo', Georgia, serif;
+  font-style: italic;
   font-weight: 400;
   letter-spacing: -0.02em;
   color: var(--black);
