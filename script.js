@@ -272,6 +272,13 @@
       grid.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     }
   }
+
+  /* After CMS replaces content the page layout shifts. Re-scroll to hash so the
+     target section stays correctly positioned (e.g. navigating from a case study page). */
+  if (window.location.hash) {
+    const target = document.querySelector(window.location.hash);
+    if (target) requestAnimationFrame(() => target.scrollIntoView({ behavior: 'instant' }));
+  }
 })();
 
 /* ──────────────────────────────────────

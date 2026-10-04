@@ -748,7 +748,6 @@ body {
 .about-full {
   padding: 80px var(--page-px) 120px;
   background: #F7F6F7;
-  scroll-margin-top: 72px;
 }
 
 .about-full-inner {
