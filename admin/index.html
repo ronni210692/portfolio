@@ -620,7 +620,7 @@ async function uploadFile(file, path) {
   const {error} = await db.storage.from(BUCKET).upload(path, file, {upsert:true, contentType:file.type});
   if (error) return {error};
   const {data} = db.storage.from(BUCKET).getPublicUrl(path);
-  return {url: data.publicUrl};
+  return {url: data.publicUrl + '?t=' + Date.now()};
 }
 function toggleSection(headerEl) {
   const body = headerEl.nextElementSibling;
