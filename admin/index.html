@@ -370,6 +370,14 @@
     <input type="password" id="pw" placeholder="Password" autofocus />
     <button onclick="doLogin()">Sign in</button>
     <p id="login-err">Wrong password. Try again.</p>
+    <p style="text-align:center;margin-top:18px">
+      <button onclick="toggleForgot()" style="background:none;border:none;color:#9CA3AF;font-size:.8rem;cursor:pointer;font-family:inherit;text-decoration:underline">Forgot password?</button>
+    </p>
+    <div id="forgot-box" style="display:none;margin-top:12px;background:#F4F5FA;border-radius:10px;padding:14px 16px;font-size:.8rem;color:#6B7280;line-height:1.6">
+      Your current password is saved in <strong>Settings → Details</strong> once you're logged in.<br>
+      Default password: <span id="reveal-pw" style="filter:blur(4px);cursor:pointer;transition:filter .2s;font-weight:600;color:#111" onclick="this.style.filter='none'" title="Click to reveal">Rc210692</span>
+      <span style="font-size:.72rem;display:block;margin-top:4px;color:#9CA3AF">(click to reveal)</span>
+    </div>
   </div>
 </div>
 
@@ -397,6 +405,11 @@
           <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           Menus
         </a>
+        <div class="nav-group-label" style="margin-top:8px">General</div>
+        <a href="#" class="nav-item" onclick="return navTo('settings',this)">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Settings
+        </a>
       </nav>
       <div class="sidebar-footer">
         <a href="../index.html" target="_blank">
@@ -416,6 +429,15 @@
 const SUPABASE_URL = 'https://ivrrohxxbxhlhxohpwsu.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_CHNjIGQrfC_RxOnT_t9J7Q_XrGa4lzN';
 const ADMIN_PASS   = 'Rc210692';
+let effectivePass  = ADMIN_PASS;
+
+/* Fetch overridden password from Supabase (if user changed it) */
+(async () => {
+  try {
+    const { data } = await db.from('site_content').select('value').eq('key','admin_password').maybeSingle();
+    if (data?.value) effectivePass = data.value;
+  } catch {}
+})();
 const BUCKET       = 'portfolio-assets';
 
 const { createClient } = supabase;
@@ -457,8 +479,13 @@ const DEFAULT_PROJECTS = [
 ];
 
 /* ── AUTH ── */
+function toggleForgot() {
+  const box = document.getElementById('forgot-box');
+  box.style.display = box.style.display === 'none' ? '' : 'none';
+}
+
 function doLogin() {
-  if (document.getElementById('pw').value === ADMIN_PASS) {
+  if (document.getElementById('pw').value === effectivePass) {
     sessionStorage.setItem('admin_ok','1');
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin').style.display = 'block';
@@ -551,6 +578,7 @@ function renderView() {
   else if (S.view === 'page-homepage') { main.innerHTML = tplHomepage(); afterHomepage(); }
   else if (S.view === 'projects')      { main.innerHTML = tplProjects(); initDragSort(); }
   else if (S.view === 'menus')         { main.innerHTML = tplMenus(); afterMenus(); }
+  else if (S.view === 'settings')      { main.innerHTML = tplSettings(); }
 }
 
 /* ── HELPERS ── */
@@ -1235,6 +1263,71 @@ function showMenuMsg(id, text, isErr) {
   el.className = 'save-msg show ' + (isErr ? 'err' : 'ok');
   clearTimeout(el._timer);
   el._timer = setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+/* ── SETTINGS ── */
+function tplSettings() {
+  const maskedKey = SUPABASE_KEY.slice(0, 18) + '…' + SUPABASE_KEY.slice(-6);
+  return '<div class="view-header"><h1>Settings</h1></div>' +
+
+    '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">🔐 Admin Credentials</div><div class="section-card-body">' +
+    '<p class="hint" style="margin-bottom:18px;color:#6B7280;font-size:.85rem">Your current login password. You can change it here — the new password will be saved to your database.</p>' +
+
+    '<div class="field"><label>Current Password</label>' +
+    '<div style="display:flex;gap:10px;align-items:center">' +
+    '<input id="f-cur-pw" type="password" value="' + esc(effectivePass) + '" readonly style="flex:1;background:var(--bg);letter-spacing:.1em" />' +
+    '<button class="btn-outline" onclick="togglePwVis()" style="white-space:nowrap;padding:9px 14px">👁 Reveal</button>' +
+    '</div></div>' +
+
+    '<div class="sub-label">Change Password</div>' +
+    '<div class="field"><label>New Password</label><input id="f-new-pw" type="password" placeholder="Enter new password…" /></div>' +
+    '<div class="field"><label>Confirm Password</label><input id="f-confirm-pw" type="password" placeholder="Repeat new password…" /></div>' +
+    '<div style="display:flex;align-items:center;gap:12px;margin-top:4px">' +
+    '<button class="btn-save" onclick="saveNewPassword()">Save new password</button>' +
+    '<span class="save-msg" id="msg-pw"></span>' +
+    '</div></div></div>' +
+
+    '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">🗄 Database Info</div><div class="section-card-body">' +
+    '<p class="hint" style="margin-bottom:14px;color:#6B7280;font-size:.85rem">Supabase project details — useful if you need to reconfigure or contact support.</p>' +
+    infoRow('Project URL', SUPABASE_URL, true) +
+    infoRow('Anon Key', maskedKey, false) +
+    infoRow('Storage Bucket', BUCKET, false) +
+    '</div></div>' +
+
+    '<div class="section-card"><div class="section-card-header" onclick="toggleSection(this)">🔗 Quick Links</div><div class="section-card-body">' +
+    '<div style="display:flex;flex-direction:column;gap:10px">' +
+    '<a href="../index.html" target="_blank" class="btn-outline" style="text-align:center;text-decoration:none">↗ View live site</a>' +
+    '<a href="https://supabase.com/dashboard" target="_blank" class="btn-outline" style="text-align:center;text-decoration:none">↗ Supabase Dashboard</a>' +
+    '</div></div></div>';
+}
+
+function infoRow(label, value, isLink) {
+  return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">' +
+    '<span style="font-size:.78rem;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.05em">' + label + '</span>' +
+    (isLink
+      ? '<a href="' + value + '" target="_blank" style="font-size:.82rem;color:var(--accent);text-decoration:none;font-weight:500">' + value + ' ↗</a>'
+      : '<span style="font-size:.82rem;color:var(--black);font-weight:500">' + value + '</span>') +
+    '</div>';
+}
+
+function togglePwVis() {
+  const inp = g('f-cur-pw');
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+async function saveNewPassword() {
+  const np = val('f-new-pw'), cp = val('f-confirm-pw');
+  if (!np) { showMenuMsg('msg-pw','Please enter a new password',true); return; }
+  if (np !== cp) { showMenuMsg('msg-pw','Passwords don\'t match',true); return; }
+  if (np.length < 6) { showMenuMsg('msg-pw','Password must be at least 6 characters',true); return; }
+  const {error} = await db.from('site_content').upsert({key:'admin_password',value:np,updated_at:new Date().toISOString()},{onConflict:'key'});
+  if (error) { showMenuMsg('msg-pw','✗ '+error.message,true); return; }
+  effectivePass = np;
+  const inp = g('f-cur-pw'); if (inp) inp.value = np;
+  g('f-new-pw').value = ''; g('f-confirm-pw').value = '';
+  showMenuMsg('msg-pw','✓ Password updated');
+  toast('Password saved!');
 }
 </script>
 </body>
