@@ -1127,6 +1127,9 @@ async function saveProject() {
   }
   window._pendingBlockFiles = {};
 
+  /* Strip preview DataURLs before saving — they're local-only and must not go to Supabase */
+  (window._csBlocks||[]).forEach(function(b) { delete b._previewUrl; });
+
   const hasCs = g('pf-has-cs') && g('pf-has-cs').checked;
   const slug  = g('pf-cs-slug') ? val('pf-cs-slug').trim().toLowerCase().replace(/[^a-z0-9-]/g,'-') : '';
 
