@@ -1027,12 +1027,12 @@ function renderCsBlocks() {
     var badge = '<span class="cs-block-type-badge ' + b.type + '">' + b.type + '</span>';
     var fields = '';
     if (b.type === 'image') {
-      var hasPending = !!(window._pendingBlockFiles && window._pendingBlockFiles[i]);
+      var previewSrc = b._previewUrl || b.src || '';
       fields = '<div class="field"><label>Image URL</label><input value="' + esc(b.src||'') + '" oninput="updateCsBlock(' + i + ',\'src\',this.value)" placeholder="https://… or upload below" /></div>' +
         '<div class="field"><label>Upload image <small style="color:#888;font-weight:400">(JPEG/WebP, max ~1.5 MB for fast loading)</small></label><div class="upload-area" onclick="g(\'cs-block-file-' + i + '\').click()">' +
         '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Choose file' +
         '<input type="file" id="cs-block-file-' + i + '" accept="image/*" style="display:none" data-block-idx="' + i + '" onchange="queueBlockImg(this,' + i + ')" /></div>' +
-        '<img id="cs-block-prev-' + i + '" src="' + esc(b.src||'') + '" style="max-height:80px;margin-top:6px;border-radius:4px;display:' + (b.src || hasPending ? 'block' : 'none') + '" />' + '</div>' +
+        '<img id="cs-block-prev-' + i + '" src="' + esc(previewSrc) + '" style="max-height:80px;margin-top:6px;border-radius:4px;display:' + (previewSrc ? 'block' : 'none') + '" />' + '</div>' +
         '<div class="field"><label>Alt text</label><input value="' + esc(b.alt||'') + '" oninput="updateCsBlock(' + i + ',\'alt\',this.value)" /></div>';
     } else if (b.type === 'text') {
       fields = '<div class="field"><label>Pill (optional)</label><input value="' + esc(b.pill||'') + '" oninput="updateCsBlock(' + i + ',\'pill\',this.value)" placeholder="• The Challenge" /></div>' +
@@ -1050,16 +1050,6 @@ function renderCsBlocks() {
       '<button class="btn-danger" style="font-size:.7rem;padding:3px 7px" onclick="removeCsBlock(' + i + ')">Remove</button>' +
       '</div></div>' + fields + '</div>';
   }).join('');
-  /* Restore pending file previews that survive re-render */
-  Object.keys(window._pendingBlockFiles || {}).forEach(function(idx) {
-    var file = window._pendingBlockFiles[idx];
-    if (!file) return;
-    var prev = g('cs-block-prev-' + idx);
-    if (!prev) return;
-    var reader = new FileReader();
-    reader.onload = function(e) { prev.src = e.target.result; prev.style.display = 'block'; };
-    reader.readAsDataURL(file);
-  });
 }
 function addCsBlock(type) {
   var b = {type:type, id: Date.now().toString(36)};
@@ -1080,6 +1070,8 @@ function queueBlockImg(input, idx) {
   window._pendingBlockFiles[idx] = input.files[0];
   const reader = new FileReader();
   reader.onload = function(e) {
+    /* Store DataURL on the block object so re-renders keep the preview */
+    if (window._csBlocks[idx]) window._csBlocks[idx]._previewUrl = e.target.result;
     const prev = g('cs-block-prev-' + idx);
     if (prev) { prev.src = e.target.result; prev.style.display = 'block'; }
   };
