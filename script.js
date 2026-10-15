@@ -15,6 +15,12 @@
     const c = {};
     contentRows.forEach(r => { c[r.key] = r.value; });
 
+    /* Nav logo */
+    if (c.nav_logo_url) {
+      const el = document.getElementById('nav-logo');
+      if (el) el.innerHTML = '<img src="' + c.nav_logo_url + '" alt="Logo" style="height:26px;width:auto;display:block;" />';
+    }
+
     /* Hero */
     if (c.hero_line1) {
       const el = document.getElementById('hero-line1');
