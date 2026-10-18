@@ -125,6 +125,16 @@
       line-height: 1.75;
     }
     .cs-block-body strong { color: #1a1a1a; }
+    .cs-block-body p { margin: 0 0 .6em; }
+    .cs-block-body p:last-child { margin-bottom: 0; }
+    .cs-block-body ul {
+      margin: .4em 0 .6em 1.1em;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cs-block-body ul:last-child { margin-bottom: 0; }
 
     .cs-block-video iframe {
       width: 100%;
@@ -304,6 +314,31 @@
         return url;
       }
 
+      function renderBody(raw) {
+        if (!raw) return '';
+        var lines = escHtml(raw).split('\n');
+        var html = '';
+        var inList = false;
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          var bullet = line.match(/^[•\-\*]\s+(.*)/);
+          var applyInline = function(t) { return t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); };
+          if (bullet) {
+            if (!inList) { html += '<ul>'; inList = true; }
+            html += '<li>' + applyInline(bullet[1]) + '</li>';
+          } else {
+            if (inList) { html += '</ul>'; inList = false; }
+            if (line.trim() === '') {
+              /* skip blank lines between blocks */
+            } else {
+              html += '<p>' + applyInline(line) + '</p>';
+            }
+          }
+        }
+        if (inList) html += '</ul>';
+        return html;
+      }
+
       function renderBlock(b) {
         if (b.type === 'image') {
           return '<div class="cs-block cs-block-img reveal">' +
@@ -314,7 +349,7 @@
           return '<div class="cs-block cs-block-text reveal">' +
             (b.pill    ? '<span class="section-pill">' + escHtml(b.pill) + '</span>' : '') +
             (b.heading ? '<h2 class="cs-block-heading">' + escHtml(b.heading) + '</h2>' : '') +
-            (b.body    ? '<p class="cs-block-body">'    + escHtml(b.body).replace(/\n/g,'<br>') + '</p>' : '') +
+            (b.body    ? '<div class="cs-block-body">'  + renderBody(b.body) + '</div>' : '') +
             '</div>';
         }
         if (b.type === 'video') {

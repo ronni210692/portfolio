@@ -1040,7 +1040,7 @@ function renderCsBlocks() {
     } else if (b.type === 'text') {
       fields = '<div class="field"><label>Pill (optional)</label><input value="' + esc(b.pill||'') + '" oninput="updateCsBlock(' + i + ',\'pill\',this.value)" placeholder="• The Challenge" /></div>' +
         '<div class="field"><label>Heading</label><input value="' + esc(b.heading||'') + '" oninput="updateCsBlock(' + i + ',\'heading\',this.value)" /></div>' +
-        '<div class="field"><label>Body text</label><textarea rows="4" oninput="updateCsBlock(' + i + ',\'body\',this.value)">' + esc(b.body||'') + '</textarea></div>';
+        '<div class="field"><label>Body text <small style="color:#888;font-weight:400">— use **bold** and • bullet lines</small></label><textarea rows="5" oninput="updateCsBlock(' + i + ',\'body\',this.value)">' + esc(b.body||'') + '</textarea></div>';
     } else if (b.type === 'video') {
       fields = '<div class="field"><label>Video URL (YouTube / Vimeo)</label><input value="' + esc(b.url||'') + '" oninput="updateCsBlock(' + i + ',\'url\',this.value)" placeholder="https://www.youtube.com/watch?v=…" /></div>';
     }
