@@ -438,6 +438,25 @@ body {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
+/* Skeleton loader for project cards while CMS loads */
+@keyframes skel-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+.skel-line,
+.project-card-skeleton .card-img {
+  display: block;
+  background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%);
+  background-size: 600px 100%;
+  animation: skel-shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+.project-card-skeleton .card-img {
+  border-radius: 0;
+  min-height: 260px;
+}
+.project-card-skeleton:hover { transform: none; box-shadow: 0 2px 20px rgba(0,0,0,.07); }
+
 /* Coloured image area — no radius, card clips it */
 .card-img {
   display: flex;

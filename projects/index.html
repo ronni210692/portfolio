@@ -6,8 +6,9 @@
   <title>Case Study — Ronni Cohen</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://ivrrohxxbxhlhxohpwsu.supabase.co" crossorigin />
   <link rel="stylesheet" href="../style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     /* ── Case Study Page ── */
     body { background: #F7F6F7; }
@@ -288,6 +289,7 @@
     </footer>
   </section>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../script.js"></script>
   <script>
     (async function initCaseStudy() {
@@ -342,7 +344,7 @@
       function renderBlock(b) {
         if (b.type === 'image') {
           return '<div class="cs-block cs-block-img reveal">' +
-            '<img src="' + escHtml(b.src) + '" alt="' + escHtml(b.alt||'') + '" loading="lazy" />' +
+            '<img src="' + escHtml(b.src) + '" alt="' + escHtml(b.alt||'') + '" />' +
             '</div>';
         }
         if (b.type === 'text') {
