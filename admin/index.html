@@ -1001,6 +1001,8 @@ function openProjectForm(id) {
   window._csMeta   = [];
   if (p && p.cs_meta)   { try { window._csMeta   = JSON.parse(typeof p.cs_meta   === 'string' ? p.cs_meta   : JSON.stringify(p.cs_meta));   } catch {} }
   if (p && p.cs_blocks) { try { window._csBlocks = JSON.parse(typeof p.cs_blocks === 'string' ? p.cs_blocks : JSON.stringify(p.cs_blocks)); } catch {} }
+  /* Ensure every block has a stable unique id for filename generation */
+  (window._csBlocks||[]).forEach(function(b,i) { if (!b.id) b.id = Date.now().toString(36) + i; });
 
   renderCsMeta();
   renderCsBlocks();
@@ -1163,10 +1165,12 @@ async function saveProject() {
   const pending = window._pendingBlockFiles || {};
   for (const idx in pending) {
     const file = pending[idx];
+    const block = window._csBlocks[idx];
     const safeName = name.toLowerCase().replace(/[^a-z0-9]/g,'-');
-    const {url, error} = await uploadFile(file, 'projects/' + safeName + '-block-' + idx + '.' + file.name.split('.').pop());
+    const blockId = (block && block.id) ? block.id : ('b' + idx);
+    const {url, error} = await uploadFile(file, 'projects/' + safeName + '-' + blockId + '.' + file.name.split('.').pop());
     if (error) { showPfMsg('✗ Block image upload: ' + error.message, true); if(btn){btn.disabled=false;btn.textContent='Save project';} return; }
-    if (window._csBlocks[idx]) window._csBlocks[idx].src = url;
+    if (block) block.src = url;
   }
   window._pendingBlockFiles = {};
 
@@ -1174,9 +1178,11 @@ async function saveProject() {
   const pendingVid = window._pendingBlockVideoFiles || {};
   for (const idx in pendingVid) {
     const file = pendingVid[idx];
+    const block = window._csBlocks[idx];
     const safeName = name.toLowerCase().replace(/[^a-z0-9]/g,'-');
+    const blockId = (block && block.id) ? block.id : ('b' + idx);
     if (btn) btn.innerHTML = '<span class="spinner"></span> Uploading video…';
-    const {url, error} = await uploadFile(file, 'projects/' + safeName + '-block-' + idx + '.mp4');
+    const {url, error} = await uploadFile(file, 'projects/' + safeName + '-' + blockId + '.mp4');
     if (error) {
       const msg = '✗ Video upload failed: ' + error.message + (file.size > 40*1024*1024 ? ' (file may be too large — compress to under 40 MB)' : '');
       showPfMsg(msg, true); toast(msg, true);
