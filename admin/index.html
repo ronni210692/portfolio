@@ -971,7 +971,8 @@ function openProjectForm(id) {
     '<div class="field"><label>Description</label><textarea id="pf-cs-desc" rows="3">' + esc(p&&p.cs_description?p.cs_description:'') + '</textarea></div>' +
     '<div class="field-row">' +
     '<div class="field"><label>CTA button label</label><input id="pf-cs-cta-label" value="' + esc(p&&p.cs_cta_label?p.cs_cta_label:'Visit Website') + '" /></div>' +
-    '<div class="field"><label>CTA URL</label><input id="pf-cs-cta-url" type="url" value="' + esc(p&&p.cs_cta_url?p.cs_cta_url:'') + '" placeholder="https://…" /></div></div>' +
+    '<div class="field"><label>CTA URL <small style="color:#888;font-weight:400">(optional if video set)</small></label><input id="pf-cs-cta-url" type="url" value="' + esc(p&&p.cs_cta_url?p.cs_cta_url:'') + '" placeholder="https://…" /></div></div>' +
+    '<div class="field"><label>CTA — open video popup <small style="color:#888;font-weight:400">(YouTube / Vimeo URL, or direct .mp4 URL)</small></label><input id="pf-cs-cta-video" type="url" value="' + esc(p&&p.cs_cta_video_url?p.cs_cta_video_url:'') + '" placeholder="https://www.youtube.com/watch?v=… — leave empty to open CTA URL instead" /></div>' +
 
     '<div class="cs-section-label">Metadata rows</div>' +
     '<div id="cs-meta-rows"></div>' +
@@ -1042,7 +1043,15 @@ function renderCsBlocks() {
         '<div class="field"><label>Heading</label><input value="' + esc(b.heading||'') + '" oninput="updateCsBlock(' + i + ',\'heading\',this.value)" /></div>' +
         '<div class="field"><label>Body text <small style="color:#888;font-weight:400">— use **bold** and • bullet lines</small></label><textarea rows="5" oninput="updateCsBlock(' + i + ',\'body\',this.value)">' + esc(b.body||'') + '</textarea></div>';
     } else if (b.type === 'video') {
-      fields = '<div class="field"><label>Video URL (YouTube / Vimeo)</label><input value="' + esc(b.url||'') + '" oninput="updateCsBlock(' + i + ',\'url\',this.value)" placeholder="https://www.youtube.com/watch?v=…" /></div>';
+      var vidName = window._pendingBlockVideoNames && window._pendingBlockVideoNames[i];
+      fields =
+        '<div class="field"><label>Upload MP4 <small style="color:#888;font-weight:400">(compress to under 10 MB for fast loading)</small></label>' +
+        '<div class="upload-area" onclick="g(\'cs-block-vfile-' + i + '\').click()">' +
+        '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
+        (vidName ? esc(vidName) : (b.src ? '✓ ' + esc(b.src.split('/').pop().split('?')[0]) : 'Choose MP4 file')) +
+        '<input type="file" id="cs-block-vfile-' + i + '" accept="video/mp4,video/webm" style="display:none" onchange="queueBlockVideo(this,' + i + ')" /></div></div>' +
+        '<p style="color:#aaa;font-size:.72rem;text-align:center;margin:4px 0 8px">— or paste a YouTube / Vimeo URL —</p>' +
+        '<div class="field"><input value="' + esc(b.url||'') + '" oninput="updateCsBlock(' + i + ',\'url\',this.value)" placeholder="https://www.youtube.com/watch?v=…" /></div>';
     }
     return '<div class="cs-block-row" data-block-idx="' + i + '">' +
       '<div class="cs-block-header">' +
@@ -1079,6 +1088,22 @@ function queueBlockImg(input, idx) {
     if (prev) { prev.src = e.target.result; prev.style.display = 'block'; }
   };
   reader.readAsDataURL(input.files[0]);
+}
+
+window._pendingBlockVideoFiles = {};
+window._pendingBlockVideoNames = {};
+function queueBlockVideo(input, idx) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  window._pendingBlockVideoFiles[idx] = file;
+  window._pendingBlockVideoNames[idx] = file.name;
+  /* update label without full re-render */
+  const area = input.closest('.upload-area');
+  if (area) {
+    const nodes = Array.from(area.childNodes);
+    nodes.forEach(n => { if (n.nodeType === Node.TEXT_NODE) area.removeChild(n); });
+    area.insertBefore(document.createTextNode('✓ ' + file.name), area.querySelector('input'));
+  }
 }
 
 function closeProjectForm() {
@@ -1130,6 +1155,19 @@ async function saveProject() {
   }
   window._pendingBlockFiles = {};
 
+  // Upload any pending block videos
+  const pendingVid = window._pendingBlockVideoFiles || {};
+  for (const idx in pendingVid) {
+    const file = pendingVid[idx];
+    const safeName = name.toLowerCase().replace(/[^a-z0-9]/g,'-');
+    showPfMsg('Uploading video…');
+    const {url, error} = await uploadFile(file, 'projects/' + safeName + '-block-' + idx + '.mp4');
+    if (error) { showPfMsg('✗ Block video upload: ' + error.message, true); if(btn){btn.disabled=false;btn.textContent='Save project';} return; }
+    if (window._csBlocks[idx]) { window._csBlocks[idx].src = url; delete window._csBlocks[idx].url; }
+  }
+  window._pendingBlockVideoFiles = {};
+  window._pendingBlockVideoNames = {};
+
   /* Strip preview DataURLs before saving — they're local-only and must not go to Supabase */
   (window._csBlocks||[]).forEach(function(b) { delete b._previewUrl; });
 
@@ -1145,8 +1183,9 @@ async function saveProject() {
     slug: hasCs ? (slug || null) : null,
     cs_pill:        hasCs ? (val('pf-cs-pill')||null) : null,
     cs_description: hasCs ? (val('pf-cs-desc')||null) : null,
-    cs_cta_label:   hasCs ? (val('pf-cs-cta-label')||null) : null,
-    cs_cta_url:     hasCs ? (val('pf-cs-cta-url')||null) : null,
+    cs_cta_label:     hasCs ? (val('pf-cs-cta-label')||null) : null,
+    cs_cta_url:       hasCs ? (val('pf-cs-cta-url')||null) : null,
+    cs_cta_video_url: hasCs ? (val('pf-cs-cta-video')||null) : null,
     cs_meta:        hasCs ? (window._csMeta||[]) : [],
     cs_blocks:      hasCs ? (window._csBlocks||[]) : [],
   };
