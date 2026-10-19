@@ -972,7 +972,12 @@ function openProjectForm(id) {
     '<div class="field-row">' +
     '<div class="field"><label>CTA button label</label><input id="pf-cs-cta-label" value="' + esc(p&&p.cs_cta_label?p.cs_cta_label:'Visit Website') + '" /></div>' +
     '<div class="field"><label>CTA URL <small style="color:#888;font-weight:400">(optional if video set)</small></label><input id="pf-cs-cta-url" type="url" value="' + esc(p&&p.cs_cta_url?p.cs_cta_url:'') + '" placeholder="https://…" /></div></div>' +
-    '<div class="field"><label>CTA — open video popup <small style="color:#888;font-weight:400">(YouTube / Vimeo URL, or direct .mp4 URL)</small></label><input id="pf-cs-cta-video" type="url" value="' + esc(p&&p.cs_cta_video_url?p.cs_cta_video_url:'') + '" placeholder="https://www.youtube.com/watch?v=… — leave empty to open CTA URL instead" /></div>' +
+    '<div class="field"><label>CTA — open video popup</label>' +
+    '<div class="upload-area" style="margin-bottom:8px" onclick="g(\'u-cta-video\').click()">' +
+    (p&&p.cs_cta_video_url&&p.cs_cta_video_url.match(/\.(mp4|webm)/i) ? '✓ ' + esc(p.cs_cta_video_url.split('/').pop().split('?')[0]) : 'Upload MP4 file (fastest)') +
+    '<input type="file" id="u-cta-video" accept="video/mp4,video/webm" style="display:none" onchange="queueCtaVideo(this)" /></div>' +
+    '<small style="color:#aaa;display:block;text-align:center;margin-bottom:6px">— or paste a YouTube / Vimeo URL —</small>' +
+    '<input id="pf-cs-cta-video" type="url" value="' + esc(p&&p.cs_cta_video_url&&!p.cs_cta_video_url.match(/\.(mp4|webm)/i)?p.cs_cta_video_url:'') + '" placeholder="https://www.youtube.com/watch?v=… — leave empty to open CTA URL instead" /></div>' +
 
     '<div class="cs-section-label">Metadata rows</div>' +
     '<div id="cs-meta-rows"></div>' +
@@ -1097,7 +1102,17 @@ function queueBlockVideo(input, idx) {
   const file = input.files[0];
   window._pendingBlockVideoFiles[idx] = file;
   window._pendingBlockVideoNames[idx] = file.name;
-  /* update label without full re-render */
+  const area = input.closest('.upload-area');
+  if (area) {
+    const nodes = Array.from(area.childNodes);
+    nodes.forEach(n => { if (n.nodeType === Node.TEXT_NODE) area.removeChild(n); });
+    area.insertBefore(document.createTextNode('✓ ' + file.name), area.querySelector('input'));
+  }
+}
+
+function queueCtaVideo(input) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
   const area = input.closest('.upload-area');
   if (area) {
     const nodes = Array.from(area.childNodes);
@@ -1160,13 +1175,32 @@ async function saveProject() {
   for (const idx in pendingVid) {
     const file = pendingVid[idx];
     const safeName = name.toLowerCase().replace(/[^a-z0-9]/g,'-');
-    showPfMsg('Uploading video…');
+    if (btn) btn.innerHTML = '<span class="spinner"></span> Uploading video…';
     const {url, error} = await uploadFile(file, 'projects/' + safeName + '-block-' + idx + '.mp4');
-    if (error) { showPfMsg('✗ Block video upload: ' + error.message, true); if(btn){btn.disabled=false;btn.textContent='Save project';} return; }
+    if (error) {
+      const msg = '✗ Video upload failed: ' + error.message + (file.size > 40*1024*1024 ? ' (file may be too large — compress to under 40 MB)' : '');
+      showPfMsg(msg, true); toast(msg, true);
+      if(btn){btn.disabled=false;btn.textContent='Save project';} return;
+    }
     if (window._csBlocks[idx]) { window._csBlocks[idx].src = url; delete window._csBlocks[idx].url; }
   }
   window._pendingBlockVideoFiles = {};
   window._pendingBlockVideoNames = {};
+
+  // Upload CTA video file if selected
+  const ctaVidFile = g('u-cta-video') && g('u-cta-video').files[0];
+  let ctaVideoUrl = val('pf-cs-cta-video') || null;
+  if (ctaVidFile) {
+    if (btn) btn.innerHTML = '<span class="spinner"></span> Uploading CTA video…';
+    const safeName = name.toLowerCase().replace(/[^a-z0-9]/g,'-');
+    const {url, error} = await uploadFile(ctaVidFile, 'projects/' + safeName + '-cta.mp4');
+    if (error) {
+      const msg = '✗ CTA video upload failed: ' + error.message;
+      showPfMsg(msg, true); toast(msg, true);
+      if(btn){btn.disabled=false;btn.textContent='Save project';} return;
+    }
+    ctaVideoUrl = url;
+  }
 
   /* Strip preview DataURLs before saving — they're local-only and must not go to Supabase */
   (window._csBlocks||[]).forEach(function(b) { delete b._previewUrl; });
@@ -1185,7 +1219,7 @@ async function saveProject() {
     cs_description: hasCs ? (val('pf-cs-desc')||null) : null,
     cs_cta_label:     hasCs ? (val('pf-cs-cta-label')||null) : null,
     cs_cta_url:       hasCs ? (val('pf-cs-cta-url')||null) : null,
-    cs_cta_video_url: hasCs ? (val('pf-cs-cta-video')||null) : null,
+    cs_cta_video_url: hasCs ? (ctaVideoUrl||null) : null,
     cs_meta:        hasCs ? (window._csMeta||[]) : [],
     cs_blocks:      hasCs ? (window._csBlocks||[]) : [],
   };
