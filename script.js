@@ -9,14 +9,44 @@
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+  /* ── serve from localStorage cache instantly, revalidate in background ── */
+  const CACHE_KEY = 'rc_portfolio_v1';
+  const CACHE_TTL = 10 * 60 * 1000; // 10 min
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (raw) {
+      const { ts, cr, pr } = JSON.parse(raw);
+      if (cr && pr && (Date.now() - ts) < CACHE_TTL) {
+        applyContent(cr);
+        applyProjects(pr);
+      }
+    }
+  } catch {}
+
   /* ── fetch both tables in parallel ── */
   const [{ data: contentRows }, { data: projects }] = await Promise.all([
     db.from('site_content').select('*'),
     db.from('projects').select('*').order('display_order')
   ]);
 
-  /* ── site_content key-value ── */
-  if (contentRows && contentRows.length) {
+  /* update cache and re-render with fresh data */
+  try {
+    if (contentRows && projects)
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), cr: contentRows, pr: projects }));
+  } catch {}
+
+  applyContent(contentRows);
+  applyProjects(projects);
+
+  if (window.location.hash) {
+    const target = document.querySelector(window.location.hash);
+    if (target) requestAnimationFrame(() => target.scrollIntoView({ behavior: 'instant' }));
+  }
+
+  /* ── helpers ── */
+  function applyContent(contentRows) {
+  if (!contentRows || !contentRows.length) return;
+  {
     const c = {};
     contentRows.forEach(r => { c[r.key] = r.value; });
 
@@ -247,48 +277,39 @@
       const el = document.getElementById('contact-linkedin-btn');
       if (el) el.href = c.contact_linkedin;
     }
-  }
+  } // end inner block
+  } // end applyContent
 
-  /* ── projects ── */
-  if (projects && projects.length) {
+  function applyProjects(projects) {
+    if (!projects || !projects.length) return;
     const grid = document.querySelector('.projects-grid');
-    if (grid) {
-      grid.innerHTML = projects.map((p, i) => {
-        const delay = i % 2 === 1 ? ' reveal-delay-1' : '';
-        const img = p.image_url
-          ? `<img src="${p.image_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />`
-          : `<div class="card-ph" style="color:#fff;">
-               <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><rect x="8" y="11" width="36" height="30" rx="4" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="23" r="4" fill="currentColor"/><path d="M8 37 L20 25 L29 33 L37 23 L44 37" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-             </div>`;
-        const tags = (p.tags || []).map(t => `<li>${t}</li>`).join('');
-        const isComingSoon = !p.has_case_study || p.cs_coming_soon;
-        const hasCaseStudy = p.has_case_study && p.slug && !p.cs_coming_soon;
-        const href = hasCaseStudy ? `projects/?slug=${p.slug}` : '#';
-        const overlay = isComingSoon
-          ? `<div class="coming-soon-overlay"><span>Coming soon</span></div>`
-          : '';
-        return `
-          <article class="project-card reveal${delay}">
-            <a href="${href}" class="card-img" style="background:${p.bg_color || '#EEEEEE'};">
-              ${img}${overlay}
-            </a>
-            <div class="card-meta">
-              <span class="card-name">${p.name}</span>
-              <ul class="card-tags">${tags}</ul>
-            </div>
-          </article>`;
-      }).join('');
-
-      /* re-observe new cards for reveal animation */
-      grid.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-    }
-  }
-
-  /* After CMS replaces content the page layout shifts. Re-scroll to hash so the
-     target section stays correctly positioned (e.g. navigating from a case study page). */
-  if (window.location.hash) {
-    const target = document.querySelector(window.location.hash);
-    if (target) requestAnimationFrame(() => target.scrollIntoView({ behavior: 'instant' }));
+    if (!grid) return;
+    grid.innerHTML = projects.map((p, i) => {
+      const delay = i % 2 === 1 ? ' reveal-delay-1' : '';
+      const img = p.image_url
+        ? `<img src="${p.image_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />`
+        : `<div class="card-ph" style="color:#fff;">
+             <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><rect x="8" y="11" width="36" height="30" rx="4" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="23" r="4" fill="currentColor"/><path d="M8 37 L20 25 L29 33 L37 23 L44 37" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+           </div>`;
+      const tags = (p.tags || []).map(t => `<li>${t}</li>`).join('');
+      const isComingSoon = !p.has_case_study || p.cs_coming_soon;
+      const hasCaseStudy = p.has_case_study && p.slug && !p.cs_coming_soon;
+      const href = hasCaseStudy ? `projects/?slug=${p.slug}` : '#';
+      const overlay = isComingSoon
+        ? `<div class="coming-soon-overlay"><span>Coming soon</span></div>`
+        : '';
+      return `
+        <article class="project-card reveal${delay}">
+          <a href="${href}" class="card-img" style="background:${p.bg_color || '#EEEEEE'};">
+            ${img}${overlay}
+          </a>
+          <div class="card-meta">
+            <span class="card-name">${p.name}</span>
+            <ul class="card-tags">${tags}</ul>
+          </div>
+        </article>`;
+    }).join('');
+    grid.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   }
 })();
 
