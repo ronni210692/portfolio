@@ -257,9 +257,10 @@
                <svg width="52" height="52" viewBox="0 0 52 52" fill="none"><rect x="8" y="11" width="36" height="30" rx="4" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="23" r="4" fill="currentColor"/><path d="M8 37 L20 25 L29 33 L37 23 L44 37" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
              </div>`;
         const tags = (p.tags || []).map(t => `<li>${t}</li>`).join('');
-        const hasCaseStudy = p.has_case_study && p.slug;
+        const isComingSoon = !p.has_case_study || p.cs_coming_soon;
+        const hasCaseStudy = p.has_case_study && p.slug && !p.cs_coming_soon;
         const href = hasCaseStudy ? `projects/?slug=${p.slug}` : '#';
-        const overlay = !hasCaseStudy
+        const overlay = isComingSoon
           ? `<div class="coming-soon-overlay"><span>Coming soon</span></div>`
           : '';
         return `

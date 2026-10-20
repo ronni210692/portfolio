@@ -388,7 +388,7 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <strong><span>R</span>onni Admin</strong>
+        <strong><span id="sidebar-logo-wrap"></span>Admin</strong>
         <span>Portfolio CMS</span>
       </div>
       <nav class="sidebar-nav">
@@ -545,6 +545,12 @@ async function initAdmin() {
     if (S.projects.length === 0) {
       await seedProjects();
     }
+  }
+
+  /* Inject logo into sidebar */
+  const logoWrap = document.getElementById('sidebar-logo-wrap');
+  if (logoWrap && S.content.nav_logo_url) {
+    logoWrap.innerHTML = '<img src="' + S.content.nav_logo_url + '" alt="" style="height:1.1em;width:auto;vertical-align:middle;margin-right:5px;display:inline-block;position:relative;top:-1px;" />';
   }
 
   renderView();
@@ -960,6 +966,9 @@ function openProjectForm(id) {
     '<div class="cs-toggle-row">' +
     '<input type="checkbox" class="cs-toggle" id="pf-has-cs" ' + (hasCs?'checked':'') + ' onchange="toggleCsEditor(this.checked)" />' +
     '<label for="pf-has-cs">Has a case study page</label></div>' +
+    '<div class="cs-toggle-row" id="cs-coming-soon-row" style="' + (hasCs?'':'display:none') + '">' +
+    '<input type="checkbox" class="cs-toggle" id="pf-cs-coming-soon" ' + (p&&p.cs_coming_soon?'checked':'') + ' />' +
+    '<label for="pf-cs-coming-soon" style="color:#888">Mark as <strong>Coming Soon</strong> — page is ready but hidden from visitors</label></div>' +
 
     /* ── Case study editor (hidden unless toggled) ── */
     '<div class="cs-editor' + (hasCs?' open':'') + '" id="cs-editor">' +
@@ -1012,6 +1021,8 @@ function openProjectForm(id) {
 function toggleCsEditor(on) {
   const el = g('cs-editor');
   if (el) el.classList.toggle('open', on);
+  const row = g('cs-coming-soon-row');
+  if (row) row.style.display = on ? '' : 'none';
 }
 
 /* ── Meta rows ── */
@@ -1226,6 +1237,7 @@ async function saveProject() {
     cs_cta_label:     hasCs ? (val('pf-cs-cta-label')||null) : null,
     cs_cta_url:       hasCs ? (val('pf-cs-cta-url')||null) : null,
     cs_cta_video_url: hasCs ? (ctaVideoUrl||null) : null,
+    cs_coming_soon: hasCs ? !!(g('pf-cs-coming-soon') && g('pf-cs-coming-soon').checked) : false,
     cs_meta:        hasCs ? (window._csMeta||[]) : [],
     cs_blocks:      hasCs ? (window._csBlocks||[]) : [],
   };
