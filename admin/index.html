@@ -87,13 +87,10 @@
       padding: 24px 20px 20px;
       border-bottom: 1px solid var(--border);
     }
-    .sidebar-logo-row { display: flex; align-items: center; gap: 6px; }
-    .sidebar-logo-row strong {
-      font-size: 1.1rem; color: var(--black);
-      font-weight: 700; letter-spacing: -.02em;
-    }
-    .sidebar-logo span { font-size: .72rem; color: var(--gray); margin-top: 2px; display: block; }
-    #sidebar-logo-wrap { display: flex; align-items: center; }
+    .sidebar-logo { display: flex; flex-direction: column; gap: 8px; }
+    .sidebar-logo-sub { font-size: .72rem; color: var(--gray); display: block; }
+    .sidebar-logo-dot { margin: 0 3px; }
+    #sidebar-logo-wrap { display: block; }
     .nav-group-label {
       padding: 20px 20px 6px;
       font-size: .65rem; font-weight: 700;
@@ -389,11 +386,8 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <div class="sidebar-logo-row">
-          <span id="sidebar-logo-wrap"></span>
-          <strong>Admin</strong>
-        </div>
-        <span>Portfolio CMS</span>
+        <span id="sidebar-logo-wrap"></span>
+        <span class="sidebar-logo-sub">Portfolio CMS <span class="sidebar-logo-dot">·</span> Admin</span>
       </div>
       <nav class="sidebar-nav">
         <div class="nav-group-label">Content</div>
@@ -554,7 +548,7 @@ async function initAdmin() {
   /* Inject logo into sidebar */
   const logoWrap = document.getElementById('sidebar-logo-wrap');
   if (logoWrap && S.content.nav_logo_url) {
-    logoWrap.innerHTML = '<img src="' + S.content.nav_logo_url + '" alt="" style="height:22px;width:auto;display:block;" />';
+    logoWrap.innerHTML = '<img src="' + S.content.nav_logo_url + '" alt="" style="height:28px;width:auto;display:block;" />';
   }
 
   renderView();
