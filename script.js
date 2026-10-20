@@ -9,8 +9,13 @@
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+  /* ── fetch both tables in parallel ── */
+  const [{ data: contentRows }, { data: projects }] = await Promise.all([
+    db.from('site_content').select('*'),
+    db.from('projects').select('*').order('display_order')
+  ]);
+
   /* ── site_content key-value ── */
-  const { data: contentRows } = await db.from('site_content').select('*');
   if (contentRows && contentRows.length) {
     const c = {};
     contentRows.forEach(r => { c[r.key] = r.value; });
@@ -245,7 +250,6 @@
   }
 
   /* ── projects ── */
-  const { data: projects } = await db.from('projects').select('*').order('display_order');
   if (projects && projects.length) {
     const grid = document.querySelector('.projects-grid');
     if (grid) {
