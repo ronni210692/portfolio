@@ -63,8 +63,7 @@
         if (c.hero_line1.includes('{{')) {
           el.innerHTML = c.hero_line1.replace(/\{\{(.+?)\}\}/g, '<em id="hero-italic">$1</em>');
         } else {
-          const italic = c.hero_italic ? `<em id="hero-italic">${c.hero_italic}</em>` : '';
-          el.innerHTML = `${c.hero_line1}<br class="br-mobile"> ${italic}`;
+          el.innerHTML = c.hero_line1;
         }
       }
     }
