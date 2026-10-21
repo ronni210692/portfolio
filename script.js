@@ -11,7 +11,7 @@
 
   /* ── serve from localStorage cache instantly, revalidate in background ── */
   const CACHE_KEY = 'rc_portfolio_v1';
-  const CACHE_TTL = 10 * 60 * 1000; // 10 min
+  const CACHE_TTL = 2 * 60 * 1000; // 2 min
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     if (raw) {

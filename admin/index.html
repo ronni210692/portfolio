@@ -829,6 +829,7 @@ async function saveAllHomepage() {
     showSaveMsg('✗ ' + (error.message || 'Save failed'), true);
     toast('Save failed: ' + (error.message || 'unknown error'), true);
   } else {
+    try { localStorage.removeItem('rc_portfolio_v1'); } catch {}
     showSaveMsg('✓ All changes saved');
     toast('Saved!');
   }
@@ -1246,6 +1247,7 @@ async function saveProject() {
   if (btn) { btn.disabled=false; btn.textContent='Save project'; }
 
   if (error) { showPfMsg('✗ ' + error.message, true); toast('Error: ' + error.message, true); return; }
+  try { localStorage.removeItem('rc_portfolio_v1'); } catch {}
   toast('Project saved!');
   closeProjectForm();
   const {data} = await db.from('projects').select('*').order('display_order');
