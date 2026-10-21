@@ -1,3 +1,6 @@
+/* prevent browser from restoring last scroll position on refresh */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
 /* ──────────────────────────────────────
    CMS: load content from Supabase
 ────────────────────────────────────── */
