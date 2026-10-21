@@ -786,6 +786,10 @@ async function saveAllHomepage() {
     const el = g('f-' + k);
     if (el) { obj[k] = el.value; S.content[k] = el.value; }
   });
+  /* If hero_line1 has no {{italic}}, clear hero_italic so it doesn't linger */
+  if (obj.hero_line1 !== undefined && !obj.hero_line1.includes('{{')) {
+    obj.hero_italic = ''; S.content.hero_italic = '';
+  }
 
   /* Experience */
   const expRows = document.querySelectorAll('#exp-rows .exp-row');
